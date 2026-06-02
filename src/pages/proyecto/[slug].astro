@@ -59,6 +59,7 @@ const { project } = Astro.props;
                     src={project.image}
                     alt={`Captura de pantalla de ${project.title}`}
                     class="project-image"
+                    loading="eager"
                 />
             </div>
 
@@ -137,7 +138,7 @@ const { project } = Astro.props;
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--color-text-muted);
         text-decoration: none;
         font-size: 0.9rem;
         font-weight: 500;
@@ -146,7 +147,7 @@ const { project } = Astro.props;
     }
 
     .back-link:hover {
-        color: #fbbf24;
+        color: var(--color-accent);
     }
 
     .back-icon {
@@ -167,9 +168,9 @@ const { project } = Astro.props;
     .project-title {
         font-size: 2.5rem;
         font-weight: 800;
-        color: white;
+        color: var(--color-text);
         margin: 0 0 1.5rem 0;
-        background: linear-gradient(135deg, #ffffff 0%, #fde047 100%);
+        background: linear-gradient(135deg, var(--color-text) 0%, var(--color-accent-light) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -211,15 +212,16 @@ const { project } = Astro.props;
         margin-bottom: 3rem;
         border-radius: 16px;
         overflow: hidden;
+        aspect-ratio: 16 / 10;
         box-shadow:
-            0 20px 50px -15px rgba(0, 0, 0, 0.5),
-            0 0 0 1px rgba(255, 255, 255, 0.05);
+            var(--shadow-card),
+            var(--shadow-accent-glow);
     }
 
     .project-image {
         width: 100%;
-        max-height: 500px;
-        object-fit: contain;
+        height: 100%;
+        object-fit: cover;
         display: block;
         background: rgba(0, 0, 0, 0.2);
     }
@@ -235,25 +237,25 @@ const { project } = Astro.props;
     .project-long-description h2 {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #fbbf24;
+        color: var(--color-accent);
         margin: 0 0 1rem 0;
     }
 
     .project-description p {
         font-size: 1.1rem;
         line-height: 1.8;
-        color: rgba(209, 213, 219, 0.9);
+        color: var(--color-text);
         margin: 0;
     }
 
     .project-long-description .markdown-content {
         font-size: 1rem;
         line-height: 1.8;
-        color: rgba(209, 213, 219, 0.85);
+        color: var(--color-text);
     }
 
     .project-long-description .markdown-content :global(strong) {
-        color: white;
+        color: var(--color-text);
         font-weight: 600;
     }
 
@@ -272,9 +274,9 @@ const { project } = Astro.props;
         padding: 0.85rem 1.5rem;
         font-size: 1rem;
         font-weight: 600;
-        color: white;
+        color: var(--color-text);
         background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid var(--color-border);
         border-radius: 12px;
         text-decoration: none;
         transition: all 0.3s ease;
@@ -289,7 +291,7 @@ const { project } = Astro.props;
     .project-link-preview {
         background: rgba(251, 191, 36, 0.1);
         border-color: rgba(251, 191, 36, 0.3);
-        color: #fbbf24;
+        color: var(--color-accent);
     }
 
     .project-link-preview:hover {
