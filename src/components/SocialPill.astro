@@ -19,15 +19,16 @@ const { href, ...rest } = Astro.props;
         justify-content: center;
         gap: 0.5rem;
         padding: 0.6rem 1.25rem;
+        min-height: 44px;
         font-size: 0.875rem;
         font-weight: 500;
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--color-text);
         background: linear-gradient(
             135deg,
-            rgba(255, 255, 255, 0.08) 0%,
-            rgba(255, 255, 255, 0.04) 100%
+            color-mix(in srgb, var(--color-surface) 80%, transparent) 0%,
+            color-mix(in srgb, var(--color-surface) 60%, transparent) 100%
         );
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--color-border);
         border-radius: 50px;
         text-decoration: none;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -41,8 +42,8 @@ const { href, ...rest } = Astro.props;
         inset: 0;
         background: linear-gradient(
             135deg,
-            rgba(250, 204, 21, 0.15) 0%,
-            rgba(250, 204, 21, 0.05) 100%
+            color-mix(in srgb, var(--color-accent) 15%, transparent) 0%,
+            color-mix(in srgb, var(--color-accent) 5%, transparent) 100%
         );
         opacity: 0;
         transition: opacity 0.3s ease;
@@ -50,14 +51,19 @@ const { href, ...rest } = Astro.props;
 
     .social-pill:hover {
         transform: translateY(-3px);
-        border-color: rgba(250, 204, 21, 0.35);
+        border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
         box-shadow:
-            0 10px 30px -10px rgba(250, 204, 21, 0.2),
-            0 0 0 1px rgba(250, 204, 21, 0.1);
+            0 10px 30px -10px color-mix(in srgb, var(--color-accent) 20%, transparent),
+            0 0 0 1px color-mix(in srgb, var(--color-accent) 10%, transparent);
     }
 
     .social-pill:hover::before {
         opacity: 1;
+    }
+
+    .social-pill:focus-visible {
+        outline: none;
+        box-shadow: var(--shadow-focus);
     }
 
     .social-pill:active {

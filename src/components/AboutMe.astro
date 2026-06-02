@@ -3,10 +3,10 @@ const personalImageAlt = "Michael Taboada";
 ---
 
 <article
-  class="flex flex-col items-center justify-center gap-8 text-gray-300 md:flex-row"
+  class="flex flex-col items-center justify-center gap-8 text-[var(--color-text)] md:flex-row"
 >
   <div
-    class="[&>p]:mb-4 [&>p>strong]:text-yellow-300 [&>p>strong]:font-normal [&>p>strong]:font-mono text-pretty order-2 md:order-1"
+    class="[&>p]:mb-4 text-pretty order-2 md:order-1"
   >
     <p>
       Me llamo Michael Andrés. Empecé en la programación con programas básicos
@@ -36,9 +36,17 @@ const personalImageAlt = "Michael Taboada";
   <img
     width="200"
     height="200"
-    src="https://i.postimg.cc/Bn7d4BW5/photo1710475066.jpg"
+    src="/yo.jpeg"
     alt={personalImageAlt}
     class="order-1 object-cover w-64 h-full p-1 md:order-2 rotate-3 lg:p-2 lg:w-64 aspect-square rounded-2xl bg-black/20 ring-1 ring-black/70"
     style="object-position: 50% 50%"
   />
 </article>
+
+<style>
+  article p strong {
+    color: var(--color-accent);
+    font-weight: normal;
+    font-family: monospace;
+  }
+</style>

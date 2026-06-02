@@ -116,12 +116,12 @@ const { title, company, description, date, link } = Astro.props;
     .timeline-dot {
         width: 14px;
         height: 14px;
-        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
         border-radius: 50%;
         margin-top: 0.25rem;
         position: relative;
         z-index: 10;
-        box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.15);
+        box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 15%, transparent);
         transition: all 0.3s ease;
     }
 
@@ -130,7 +130,7 @@ const { title, company, description, date, link } = Astro.props;
         top: 0.25rem;
         width: 14px;
         height: 14px;
-        background: #fbbf24;
+        background: var(--color-accent);
         border-radius: 50%;
         filter: blur(8px);
         opacity: 0.4;
@@ -153,8 +153,8 @@ const { title, company, description, date, link } = Astro.props;
     .experience-item:hover .timeline-dot {
         transform: scale(1.2);
         box-shadow:
-            0 0 0 4px rgba(251, 191, 36, 0.25),
-            0 0 20px rgba(251, 191, 36, 0.4);
+            0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent),
+            0 0 20px color-mix(in srgb, var(--color-accent) 40%, transparent);
     }
 
     /* Experience Card */
@@ -165,10 +165,10 @@ const { title, company, description, date, link } = Astro.props;
         padding: 1.5rem;
         background: linear-gradient(
             135deg,
-            rgba(255, 255, 255, 0.03) 0%,
-            rgba(255, 255, 255, 0.01) 100%
+            color-mix(in srgb, var(--color-surface) 80%, transparent) 0%,
+            color-mix(in srgb, var(--color-surface) 80%, transparent) 100%
         );
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--color-border);
         border-radius: 16px;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
@@ -185,7 +185,7 @@ const { title, company, description, date, link } = Astro.props;
         background: linear-gradient(
             90deg,
             transparent,
-            rgba(251, 191, 36, 0.3),
+            color-mix(in srgb, var(--color-accent) 30%, transparent),
             transparent
         );
         opacity: 0;
@@ -195,10 +195,10 @@ const { title, company, description, date, link } = Astro.props;
     .experience-card:hover {
         background: linear-gradient(
             135deg,
-            rgba(255, 255, 255, 0.05) 0%,
-            rgba(251, 191, 36, 0.02) 100%
+            color-mix(in srgb, var(--color-surface) 90%, transparent) 0%,
+            color-mix(in srgb, var(--color-accent) 5%, transparent) 100%
         );
-        border-color: rgba(251, 191, 36, 0.15);
+        border-color: color-mix(in srgb, var(--color-accent) 25%, var(--color-border));
         transform: translateX(4px);
     }
 
@@ -224,7 +224,7 @@ const { title, company, description, date, link } = Astro.props;
     .experience-title {
         font-size: 1.2rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #fbbf24 0%, #fcd34d 100%);
+        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -236,7 +236,7 @@ const { title, company, description, date, link } = Astro.props;
     .experience-company {
         font-size: 0.95rem;
         font-weight: 600;
-        color: rgba(255, 255, 255, 0.9);
+        color: var(--color-text);
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -247,7 +247,7 @@ const { title, company, description, date, link } = Astro.props;
         align-items: center;
         gap: 0.4rem;
         font-size: 0.85rem;
-        color: rgba(156, 163, 175, 0.8);
+        color: var(--color-text-muted);
         font-weight: 500;
         margin-top: 0.25rem;
     }
@@ -268,7 +268,7 @@ const { title, company, description, date, link } = Astro.props;
     .experience-description {
         font-size: 0.95rem;
         line-height: 1.75;
-        color: rgba(209, 213, 219, 0.85);
+        color: var(--color-text);
         margin: 0;
         max-width: 550px;
     }
@@ -278,24 +278,24 @@ const { title, company, description, date, link } = Astro.props;
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        color: #fbbf24;
+        color: var(--color-accent);
         font-size: 0.875rem;
         font-weight: 600;
         text-decoration: none;
         margin-top: 0.75rem;
         padding: 0.5rem 0.9rem;
-        background: rgba(251, 191, 36, 0.1);
-        border: 1px solid rgba(251, 191, 36, 0.2);
+        background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+        border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
         border-radius: 8px;
         width: fit-content;
         transition: all 0.3s ease;
     }
 
     .experience-link:hover {
-        background: rgba(251, 191, 36, 0.15);
-        border-color: rgba(251, 191, 36, 0.4);
+        background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+        border-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.15);
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--color-accent) 15%, transparent);
     }
 
     .link-arrow {
