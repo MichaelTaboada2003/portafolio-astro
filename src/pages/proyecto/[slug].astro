@@ -1,0 +1,304 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import SectionContainer from "../../components/SectionContainer.astro";
+import { getAllProjects } from "../../data/projects";
+import GithubIcon from "../../icons/GithubIcon.astro";
+
+export async function getStaticPaths() {
+    const projects = getAllProjects();
+    return projects.map((project) => ({
+        params: { slug: project.slug },
+        props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={`${project.title} - Michael Taboada`}>
+    <main class="px-4 py-14 md:py-24">
+        <SectionContainer>
+            <!-- Back Link -->
+            <a href="/proyectos" class="back-link">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    class="back-icon"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span>Volver a proyectos</span>
+            </a>
+
+            <!-- Project Header -->
+            <div class="project-header">
+                <h1 class="project-title">{project.title}</h1>
+
+                <!-- Tags -->
+                <ul class="project-tags">
+                    {
+                        project.tags.map((tag: any) => (
+                            <li>
+                                <span class={`project-tag ${tag.class}`}>
+                                    {tag.icon && <tag.icon class="tag-icon" />}
+                                    {tag.name}
+                                </span>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
+
+            <!-- Project Image -->
+            <div class="project-image-wrapper">
+                <img
+                    src={project.image}
+                    alt={`Captura de pantalla de ${project.title}`}
+                    class="project-image"
+                />
+            </div>
+
+            <!-- Project Content -->
+            <div class="project-content">
+                <!-- Description -->
+                <div class="project-description">
+                    <h2>Descripción</h2>
+                    <p>{project.description}</p>
+                </div>
+
+                <!-- Long Description -->
+                {
+                    project.longDescription && (
+                        <div class="project-long-description">
+                            <h2>Detalles del proyecto</h2>
+                            <div
+                                class="markdown-content"
+                                set:html={project.longDescription
+                                    .replace(
+                                        /\*\*(.*?)\*\*/g,
+                                        "<strong>$1</strong>",
+                                    )
+                                    .replace(/\n/g, "<br/>")
+                                    .replace(/- /g, "• ")}
+                            />
+                        </div>
+                    )
+                }
+
+                <!-- Links -->
+                <div class="project-links">
+                    {
+                        project.github && (
+                            <a
+                                href={project.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="project-link"
+                            >
+                                <GithubIcon class="link-icon" />
+                                <span>Ver código en GitHub</span>
+                            </a>
+                        )
+                    }
+                    {
+                        project.preview && (
+                            <a
+                                href={project.preview}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="project-link project-link-preview"
+                            >
+                                <svg
+                                    class="link-icon"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path d="M12.232 4.232a2.5 2.5 0 013.536 3.536l-1.225 1.224a.75.75 0 001.061 1.06l1.224-1.224a4 4 0 00-5.656-5.656l-3 3a4 4 0 00.225 5.865.75.75 0 00.977-1.138 2.5 2.5 0 01-.142-3.667l3-3z" />
+                                    <path d="M11.603 7.963a.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 00-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865z" />
+                                </svg>
+                                <span>Ver demo en vivo</span>
+                            </a>
+                        )
+                    }
+                </div>
+            </div>
+        </SectionContainer>
+    </main>
+</Layout>
+
+<style>
+    /* Back Link */
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 2rem;
+        transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: #fbbf24;
+    }
+
+    .back-icon {
+        width: 1.1rem;
+        height: 1.1rem;
+        transition: transform 0.2s ease;
+    }
+
+    .back-link:hover .back-icon {
+        transform: translateX(-4px);
+    }
+
+    /* Project Header */
+    .project-header {
+        margin-bottom: 2rem;
+    }
+
+    .project-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: white;
+        margin: 0 0 1.5rem 0;
+        background: linear-gradient(135deg, #ffffff 0%, #fde047 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    @media (min-width: 768px) {
+        .project-title {
+            font-size: 3rem;
+        }
+    }
+
+    /* Tags */
+    .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .project-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 50px;
+    }
+
+    .tag-icon {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    /* Project Image */
+    .project-image-wrapper {
+        margin-bottom: 3rem;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow:
+            0 20px 50px -15px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .project-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+        display: block;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Project Content */
+    .project-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .project-description h2,
+    .project-long-description h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fbbf24;
+        margin: 0 0 1rem 0;
+    }
+
+    .project-description p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: rgba(209, 213, 219, 0.9);
+        margin: 0;
+    }
+
+    .project-long-description .markdown-content {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: rgba(209, 213, 219, 0.85);
+    }
+
+    .project-long-description .markdown-content :global(strong) {
+        color: white;
+        font-weight: 600;
+    }
+
+    /* Links */
+    .project-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .project-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.85rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .project-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .project-link-preview {
+        background: rgba(251, 191, 36, 0.1);
+        border-color: rgba(251, 191, 36, 0.3);
+        color: #fbbf24;
+    }
+
+    .project-link-preview:hover {
+        background: rgba(251, 191, 36, 0.2);
+        border-color: rgba(251, 191, 36, 0.5);
+    }
+
+    .link-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+</style>

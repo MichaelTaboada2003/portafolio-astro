@@ -125,7 +125,9 @@ export const TAGS = {
 
 export interface Project {
     title: string;
+    slug: string;
     description: string;
+    longDescription?: string;
     image: string;
     tags: typeof TAGS[keyof typeof TAGS][];
     github?: string;
@@ -137,7 +139,21 @@ export interface Project {
 export const PROJECTS: Project[] = [
     {
         title: 'Networking App',
+        slug: 'networking',
         description: 'Aplicación web para gestión de contactos profesionales y networking. Incluye autenticación de usuarios, gestión de perfiles, dashboard personalizado y exportación de datos. Con +55 usuarios',
+        longDescription: `Networking App es una plataforma web completa diseñada para profesionales que buscan optimizar sus conexiones comerciales. 
+
+**Características principales:**
+- Sistema de autenticación seguro con Supabase
+- Gestión de perfiles de contactos con información detallada
+- Dashboard personalizado con métricas y estadísticas
+- Integración de IA con Groq para sugerencias inteligentes
+- Exportación de datos en múltiples formatos
+- Interfaz responsive y moderna con Tailwind CSS
+
+**Logros:**
+- +55 usuarios activos
+- Sistema de recomendaciones basado en IA`,
         image: '/networking.png',
         tags: [TAGS.REACT, TAGS.TAILWIND, TAGS.SUPABASE, TAGS.GROQ],
         preview: 'https://networking-livid.vercel.app/',
@@ -145,7 +161,22 @@ export const PROJECTS: Project[] = [
     },
     {
         title: 'Gym Tracker',
+        slug: 'gym-tracker',
         description: 'Aplicación móvil para seguimiento de entrenamientos en el gimnasio. Permite registrar ejercicios, series, repeticiones y peso. Incluye estadísticas de progreso y visualización de datos.',
+        longDescription: `Gym Tracker es una aplicación móvil desarrollada con React Native y Expo, diseñada para ayudar a los usuarios a llevar un registro detallado de sus entrenamientos.
+
+**Características principales:**
+- Registro de ejercicios con series, repeticiones y peso
+- Historial completo de entrenamientos
+- Visualización de estadísticas de progreso
+- Rutinas personalizables
+- Almacenamiento local para uso offline
+- Interfaz intuitiva y fácil de usar
+
+**Stack tecnológico:**
+- React Native con Expo para desarrollo multiplataforma
+- TypeScript para tipado estático
+- AsyncStorage para persistencia de datos`,
         image: '/gym-tracker.png',
         tags: [TAGS.REACT_NATIVE, TAGS.EXPO, TAGS.TYPESCRIPT],
         github: 'https://github.com/MichaelTaboada2003/gym-tracker',
@@ -153,7 +184,22 @@ export const PROJECTS: Project[] = [
     },
     {
         title: 'A World Away - NASA 2025',
+        slug: 'a-world-away',
         description: 'Proyecto desarrollado para el NASA Space Apps Challenge 2025. Exploración de mundos lejanos y visualización de datos astronómicos con IA.',
+        longDescription: `A World Away es un proyecto innovador desarrollado para el NASA Space Apps Challenge 2025, enfocado en la exploración y visualización de exoplanetas.
+
+**Características principales:**
+- Visualización 3D interactiva de sistemas estelares
+- Integración de datos astronómicos reales de la NASA
+- Modelos de IA para predicción de habitabilidad
+- Interfaz multilingüe (español e inglés)
+- Simulaciones de condiciones atmosféricas
+
+**Stack tecnológico:**
+- Vue.js para la interfaz de usuario
+- Three.js para visualizaciones 3D
+- Python para procesamiento de datos
+- Groq para análisis con IA`,
         image: '/AWorldAway.png',
         tags: [TAGS.PYTHON, TAGS.VUE, TAGS.THREEJS, TAGS.GROQ],
         github: 'https://github.com/MichaelTaboada2003/AWorldAway_Nasa2025',
@@ -166,13 +212,41 @@ export const PROJECTS: Project[] = [
 export const ALL_SELECTED_PROJECTS: Project[] = [
     {
         title: 'Shainy',
+        slug: 'shainy',
         description: 'Plataforma e-commerce de gestión de ventas con sincronización de inventario en tiempo real y checkout dinámico vía WhatsApp.',
+        longDescription: `Shainy es una plataforma e-commerce completa diseñada para pequeños y medianos comercios que buscan digitalizar sus ventas.
+
+**Características principales:**
+- Panel de administración completo con Supabase
+- Sincronización en tiempo real con Google Sheets
+- Catálogo de productos dinámico
+- Checkout integrado con WhatsApp
+- Generación automática de PDFs de catálogos
+- Gestión de inventario en tiempo real
+
+**Stack tecnológico:**
+- Next.js 14 con App Router
+- Supabase para base de datos y autenticación
+- Tailwind CSS para estilos
+- TypeScript para tipado estático`,
         image: '/shainy.png',
         tags: [TAGS.NEXTJS, TAGS.SUPABASE, TAGS.TAILWIND, TAGS.TYPESCRIPT],
     },
     {
         title: 'Networking App',
+        slug: 'networking',
         description: 'Aplicación web para gestión de contactos profesionales y networking. Incluye autenticación de usuarios, gestión de perfiles, dashboard personalizado y exportación de datos. Con +55 usuarios',
+        longDescription: `Networking App es una plataforma web completa diseñada para profesionales que buscan optimizar sus conexiones comerciales.
+
+**Características principales:**
+- Sistema de autenticación seguro con Supabase
+- Gestión de perfiles de contactos con información detallada
+- Dashboard personalizado con métricas y estadísticas
+- Integración de IA con Groq para sugerencias inteligentes
+- Exportación de datos en múltiples formatos
+
+**Logros:**
+- +55 usuarios activos`,
         image: '/networking.png',
         tags: [TAGS.REACT, TAGS.TAILWIND, TAGS.SUPABASE, TAGS.GROQ],
         preview: 'https://networking-livid.vercel.app/',
@@ -180,7 +254,16 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
     },
     {
         title: 'Gym Tracker',
+        slug: 'gym-tracker',
         description: 'Aplicación móvil para seguimiento de entrenamientos en el gimnasio. Permite registrar ejercicios, series, repeticiones y peso. Incluye estadísticas de progreso y visualización de datos.',
+        longDescription: `Gym Tracker es una aplicación móvil para el seguimiento completo de rutinas de gimnasio.
+
+**Características principales:**
+- Registro detallado de ejercicios
+- Historial de entrenamientos
+- Estadísticas de progreso
+- Rutinas personalizables
+- Modo offline`,
         image: '/gym-tracker.png',
         tags: [TAGS.REACT_NATIVE, TAGS.EXPO, TAGS.TYPESCRIPT],
         github: 'https://github.com/MichaelTaboada2003/gym-tracker',
@@ -188,14 +271,37 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
     },
     {
         title: 'Exosky - NASA Space Apps 2024',
+        slug: 'exosky',
         description: 'Visualizador interactivo del cielo nocturno desde la superficie de exoplanetas. Desarrollado para NASA Space Apps 2024.',
+        longDescription: `Exosky es un visualizador astronómico interactivo que permite explorar cómo se vería el cielo nocturno desde la superficie de diferentes exoplanetas.
+
+**Características principales:**
+- Cálculos astronómicos precisos basados en coordenadas estelares
+- Visualización 3D del cielo nocturno
+- Catálogo de más de 100,000 estrellas
+- Búsqueda y exploración de exoplanetas
+- Dibujo interactivo de constelaciones
+
+**Stack tecnológico:**
+- React para la interfaz de usuario
+- Three.js para visualizaciones 3D
+- FastAPI (Python) para el backend
+- Datos astronómicos de catálogos científicos`,
         image: '/exosky.png',
         tags: [TAGS.REACT, TAGS.PYTHON, TAGS.THREEJS, TAGS.TAILWIND],
         github: 'https://github.com/MichaelTaboada2003/Exosky-Nasa-Space-App-2024',
     },
     {
         title: 'A World Away - NASA 2025',
+        slug: 'a-world-away',
         description: 'Proyecto desarrollado para el NASA Space Apps Challenge 2025. Exploración de mundos lejanos y visualización de datos astronómicos con IA.',
+        longDescription: `A World Away es un proyecto para el NASA Space Apps Challenge 2025 enfocado en la exploración exoplanetaria.
+
+**Características principales:**
+- Visualización 3D de sistemas estelares
+- Datos astronómicos de la NASA
+- Modelos de IA para habitabilidad
+- Interfaz multilingüe`,
         image: '/AWorldAway.png',
         tags: [TAGS.VUE, TAGS.PYTHON, TAGS.THREEJS, TAGS.GROQ],
         github: 'https://github.com/MichaelTaboada2003/AWorldAway_Nasa2025',
@@ -204,7 +310,16 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
     },
     {
         title: 'Novenas 2025',
+        slug: 'novenas',
         description: 'Aplicación web para el seguimiento de asistencias de las Novenas navideñas con inteligencia artificial.',
+        longDescription: `Novenas 2025 es una aplicación web moderna para gestionar y hacer seguimiento de las tradicionales Novenas navideñas.
+
+**Características principales:**
+- Seguimiento de asistencias
+- Gestión de participantes
+- Integración de IA para contenido dinámico
+- Interfaz moderna y responsive
+- Calendario interactivo`,
         image: '/novenas.png',
         tags: [TAGS.NEXTJS, TAGS.TAILWIND, TAGS.TYPESCRIPT],
     },
@@ -212,3 +327,5 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
 
 export const getFeaturedProjects = () => PROJECTS.filter(p => p.featured);
 export const getAllProjects = () => ALL_SELECTED_PROJECTS;
+export const getProjectBySlug = (slug: string) => ALL_SELECTED_PROJECTS.find(p => p.slug === slug);
+
