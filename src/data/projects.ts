@@ -121,6 +121,21 @@ export const TAGS = {
         class: 'bg-[#1a1a2e]/60 text-[#c4c4c4]',
         icon: ExpoIcon,
     },
+    FASTAPI: {
+        name: 'FastAPI',
+        class: 'bg-[#009688]/25 text-[#009688]',
+        icon: null,
+    },
+    OPENCV: {
+        name: 'OpenCV',
+        class: 'bg-[#5C3EE8]/25 text-[#5C3EE8]',
+        icon: null,
+    },
+    SCIKIT: {
+        name: 'scikit-learn',
+        class: 'bg-[#F7931E]/25 text-[#F7931E]',
+        icon: null,
+    },
 }
 
 export interface Project {
@@ -322,6 +337,32 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
 - Calendario interactivo`,
         image: '/novenas.png',
         tags: [TAGS.NEXTJS, TAGS.TAILWIND, TAGS.TYPESCRIPT],
+    },
+    {
+        title: 'Sensado y Modelado de Sistemas Físicos',
+        slug: 'sensado-sistemas-fisicos',
+        description: 'Hub académico con 5 laboratorios interactivos: estimación de gravedad, visión computacional, coeficiente de restitución, análisis de péndulo con FFT y clasificación de cobertura terrestre con Sentinel-2.',
+        longDescription: `Repositorio que centraliza 5 experimentos de la asignatura Sensado y Modelado de Sistemas Físicos, cada uno con arquitectura cliente-servidor (FastAPI + React).
+
+**Bento Launcher:**
+- Dashboard central con interfaz glassmorphism para orquestar todos los módulos
+- Lanzamiento automatizado de servicios locales con logs en tiempo real
+
+**Aplicaciones del laboratorio:**
+- Estimación manual de gravedad mediante ajuste de curva (curve_fit)
+- Gravity Tracker automatizado con visión computacional (OpenCV) y segmentación HSV
+- Coeficiente de restitución detectando impactos en video
+- Péndulo simple con seguimiento de color y FFT para calcular frecuencia dominante
+- Imágenes satelitales Sentinel-2 L2A con índices espectrales (NDVI, BSI, NDWI) y clasificador Random Forest
+
+**Stack tecnológico:**
+- Backend: Python 3, FastAPI, uvicorn
+- Frontend: React 19, TypeScript, Vite, Tailwind CSS
+- Visión: OpenCV, numpy, scipy
+- ML: scikit-learn, rasterio, pystac-client`,
+        image: '/hub-sensado.png',
+        tags: [TAGS.PYTHON, TAGS.REACT, TAGS.FASTAPI, TAGS.OPENCV, TAGS.TYPESCRIPT, TAGS.SCIKIT],
+        github: 'https://github.com/MichaelTaboada2003/Sensado-y-Modelado-de-Sistemas-Fisicos',
     },
 ]
 
