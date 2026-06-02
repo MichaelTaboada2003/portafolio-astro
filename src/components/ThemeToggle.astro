@@ -1,0 +1,134 @@
+---
+// ThemeToggle.astro — Sin props, componente autónomo de alternancia de tema
+---
+
+<button
+  id="theme-toggle"
+  class="theme-toggle"
+  role="switch"
+  aria-checked="true"
+  aria-label="Cambiar a tema claro"
+  title="Cambiar tema"
+>
+  <!-- Icono sol: visible cuando el tema oscuro está activo (clic para cambiar a claro) -->
+  <svg
+    id="sun-icon"
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="5"></circle>
+    <line x1="12" y1="1" x2="12" y2="3"></line>
+    <line x1="12" y1="21" x2="12" y2="23"></line>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+    <line x1="1" y1="12" x2="3" y2="12"></line>
+    <line x1="21" y1="12" x2="23" y2="12"></line>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  </svg>
+
+  <!-- Icono luna: visible cuando el tema claro está activo (clic para cambiar a oscuro) -->
+  <svg
+    id="moon-icon"
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    style="display: none;"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+</button>
+
+<script>
+  import { getNextTheme } from '../utils/theme';
+
+  function initThemeToggle() {
+    const button = document.getElementById('theme-toggle') as HTMLButtonElement | null;
+    const sunIcon = document.getElementById('sun-icon') as SVGElement | null;
+    const moonIcon = document.getElementById('moon-icon') as SVGElement | null;
+
+    if (!button || !sunIcon || !moonIcon) return;
+
+    function updateUI() {
+      const isDark = document.documentElement.classList.contains('dark');
+      // Sol visible en tema oscuro (permite cambiar a claro)
+      (sunIcon as SVGElement).style.display = isDark ? 'block' : 'none';
+      // Luna visible en tema claro (permite cambiar a oscuro)
+      (moonIcon as SVGElement).style.display = isDark ? 'none' : 'block';
+      (button as HTMLButtonElement).setAttribute('aria-checked', String(isDark));
+      (button as HTMLButtonElement).setAttribute(
+        'aria-label',
+        isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'
+      );
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      const nextTheme = getNextTheme(currentTheme);
+      document.documentElement.classList.remove('dark', 'light');
+      document.documentElement.classList.add(nextTheme);
+      try {
+        localStorage.setItem('theme', nextTheme);
+      } catch (_e) {
+        // localStorage no disponible en modo privado — sin persistencia
+      }
+      updateUI();
+    }
+
+    // Inicializar estado de la UI
+    updateUI();
+
+    // Adjuntar manejador de clic
+    button.addEventListener('click', toggleTheme);
+  }
+
+  // Inicializar al cargar la página (y re-inicializar en navegaciones ViewTransitions)
+  document.addEventListener('astro:page-load', initThemeToggle);
+</script>
+
+<style>
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: color 150ms ease, background-color 150ms ease;
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-accent);
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .theme-toggle {
+      transition: color 150ms ease, background-color 150ms ease, transform 200ms ease;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+  }
+</style>

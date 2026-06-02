@@ -4,6 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Animations from "../components/Animations.astro";
 import { ViewTransitions } from "astro:transitions";
+import "../styles/global.css";
 
 interface Props {
 	title: string;
@@ -13,8 +14,22 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
 	<head>
+		<script is:inline>
+			(function () {
+				try {
+					const stored = localStorage.getItem('theme');
+					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					const theme = (stored === 'dark' || stored === 'light') ? stored : (prefersDark ? 'dark' : 'light');
+					document.documentElement.classList.add(theme);
+				} catch (e) {
+					// localStorage not available (private mode) — fall back to matchMedia
+					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					document.documentElement.classList.add(prefersDark ? 'dark' : 'light');
+				}
+			})();
+		</script>
 		<meta name="viewport" content="width=device-width" />
 		<meta name="description" content="Portafolio creado con Astro" />
 		<meta charset="UTF-8" />
@@ -31,9 +46,6 @@ const { title } = Astro.props;
 	</body>
 </html>
 <style is:global>
-	:root {
-		color-scheme: dark;
-	}
 	html {
 		font-family: "Onest Variable", system-ui, sans-serif;
 		scroll-behavior: smooth;
@@ -58,15 +70,12 @@ const { title } = Astro.props;
 		display: flex;
 		min-height: 100vh;
 		flex-direction: column;
+		background-color: var(--color-bg);
+		color: var(--color-text);
 	}
-	@media (prefers-reduce-motion: reduce) {
+	@media (prefers-reduced-motion: reduce) {
 		html {
 			scroll-behavior: auto;
-		}
-	}
-	@media (prefers-color-scheme: dark) {
-		body {
-			color: rgba(255, 255, 255, 0.9);
 		}
 	}
 </style>
