@@ -1,0 +1,92 @@
+/* ==========================================================================
+   global.css — Reset, variables CSS y utilidades base
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Box-sizing reset (siempre activo)
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   2. Variables CSS — Tema oscuro (por defecto)
+   -------------------------------------------------------------------------- */
+:root,
+.dark {
+  --color-bg:           #0a0a0f;
+  --color-surface:      #111118;
+  --color-border:       #1e1e2e;
+  --color-text:         #f0f0f5;
+  --color-text-muted:   #6b7280;
+  --color-accent:       #fbbf24;
+  --color-accent-light: #fde68a;
+  --color-accent-dark:  #d97706;
+  --shadow-focus:       0 0 0 3px rgba(251,191,36,0.5);
+  --shadow-card:        0 10px 30px -10px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-card-hover:  0 20px 40px -15px rgba(0,0,0,0.5), 0 0 0 1px rgba(251,191,36,0.1);
+  --shadow-accent-glow: 0 10px 30px -10px rgba(251,191,36,0.3);
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   3. Variables CSS — Tema claro
+   -------------------------------------------------------------------------- */
+.light {
+  --color-bg:           #f8f8fc;
+  --color-surface:      #ffffff;
+  --color-border:       #e2e2ee;
+  --color-text:         #1a1a2e;
+  --color-text-muted:   #5c5c7a;
+  --color-accent:       #d97706;
+  --color-accent-light: #fbbf24;
+  --color-accent-dark:  #92400e;
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   4. Override @font-face para font-display: swap (evita FOIT)
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Onest Variable';
+  font-display: swap;
+}
+
+/* --------------------------------------------------------------------------
+   5. Estilos base del body
+   -------------------------------------------------------------------------- */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Onest Variable', system-ui, sans-serif;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+/* --------------------------------------------------------------------------
+   6. Accesibilidad — foco visible global (Requisito 8.2)
+   -------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Elementos con bordes redondeados usan box-shadow en lugar de outline */
+.social-pill:focus-visible,
+.view-more-btn:focus-visible,
+.theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* --------------------------------------------------------------------------
+   7. Transiciones largas — solo cuando el movimiento está permitido
+      Patrón: cortas siempre activas; largas condicionadas a reduced-motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .interactive-element {
+    transition: color 150ms ease, transform 300ms cubic-bezier(0.4,0,0.2,1), box-shadow 300ms ease;
+  }
+}
