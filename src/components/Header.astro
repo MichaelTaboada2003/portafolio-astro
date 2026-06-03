@@ -44,7 +44,7 @@ const navItems = [
       ))
     }
   </nav>
-  <div class="ml-3">
+  <div class="theme-toggle-wrapper">
     <ThemeToggle />
   </div>
 </header>
@@ -99,10 +99,17 @@ const navItems = [
 
   @keyframes nav-shadown {
     to {
-      @apply shadow-lg ring-1 backdrop-blur;
-      ring-color: color-mix(in srgb, var(--color-border) 50%, transparent);
+      @apply shadow-lg backdrop-blur;
       background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
     }
+  }
+
+  /* Toggle de tema fijo en la esquina superior derecha */
+  .theme-toggle-wrapper {
+    position: fixed;
+    top: 0.5rem;
+    right: 1rem;
+    z-index: 20;
   }
 
   .nav-link {

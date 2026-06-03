@@ -54,53 +54,6 @@
   </svg>
 </button>
 
-<script>
-  import { getNextTheme } from '../utils/theme';
-
-  function initThemeToggle() {
-    const button = document.getElementById('theme-toggle') as HTMLButtonElement | null;
-    const sunIcon = document.getElementById('sun-icon') as SVGElement | null;
-    const moonIcon = document.getElementById('moon-icon') as SVGElement | null;
-
-    if (!button || !sunIcon || !moonIcon) return;
-
-    function updateUI() {
-      const isDark = document.documentElement.classList.contains('dark');
-      // Sol visible en tema oscuro (permite cambiar a claro)
-      (sunIcon as SVGElement).style.display = isDark ? 'block' : 'none';
-      // Luna visible en tema claro (permite cambiar a oscuro)
-      (moonIcon as SVGElement).style.display = isDark ? 'none' : 'block';
-      (button as HTMLButtonElement).setAttribute('aria-checked', String(isDark));
-      (button as HTMLButtonElement).setAttribute(
-        'aria-label',
-        isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'
-      );
-    }
-
-    function toggleTheme() {
-      const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-      const nextTheme = getNextTheme(currentTheme);
-      document.documentElement.classList.remove('dark', 'light');
-      document.documentElement.classList.add(nextTheme);
-      try {
-        localStorage.setItem('theme', nextTheme);
-      } catch (_e) {
-        // localStorage no disponible en modo privado — sin persistencia
-      }
-      updateUI();
-    }
-
-    // Inicializar estado de la UI
-    updateUI();
-
-    // Adjuntar manejador de clic
-    button.addEventListener('click', toggleTheme);
-  }
-
-  // Inicializar al cargar la página (y re-inicializar en navegaciones ViewTransitions)
-  document.addEventListener('astro:page-load', initThemeToggle);
-</script>
-
 <style>
   .theme-toggle {
     display: flex;
@@ -109,17 +62,21 @@
     min-width: 44px;
     min-height: 44px;
     padding: 0.5rem;
-    background: transparent;
-    border: none;
-    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-surface) 85%, transparent);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
     color: var(--color-text);
     cursor: pointer;
-    transition: color 150ms ease, background-color 150ms ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: var(--shadow-card);
+    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
   }
 
   .theme-toggle:hover {
     color: var(--color-accent);
-    background-color: color-mix(in srgb, var(--color-text) 8%, transparent);
+    border-color: var(--color-accent);
+    background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
   }
 
   @media (prefers-reduced-motion: no-preference) {

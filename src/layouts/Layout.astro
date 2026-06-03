@@ -18,16 +18,58 @@ const { title } = Astro.props;
 	<head>
 		<script is:inline>
 			(function () {
-				try {
-					const stored = localStorage.getItem('theme');
-					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-					const theme = (stored === 'dark' || stored === 'light') ? stored : (prefersDark ? 'dark' : 'light');
-					document.documentElement.classList.add(theme);
-				} catch (e) {
-					// localStorage not available (private mode) — fall back to matchMedia
-					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-					document.documentElement.classList.add(prefersDark ? 'dark' : 'light');
+				function applyTheme() {
+					var theme;
+					try {
+						var stored = localStorage.getItem('theme');
+						var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+						theme = (stored === 'dark' || stored === 'light') ? stored : (prefersDark ? 'dark' : 'light');
+					} catch (e) {
+						theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+					}
+					var root = document.documentElement;
+					root.classList.remove('dark', 'light');
+					root.classList.add(theme);
 				}
+
+				// Sincroniza el icono y los aria-* del botón con el tema actual
+				function syncToggleUI() {
+					var isDark = document.documentElement.classList.contains('dark');
+					var sun = document.getElementById('sun-icon');
+					var moon = document.getElementById('moon-icon');
+					var btn = document.getElementById('theme-toggle');
+					if (sun) sun.style.display = isDark ? 'block' : 'none';
+					if (moon) moon.style.display = isDark ? 'none' : 'block';
+					if (btn) {
+						btn.setAttribute('aria-checked', String(isDark));
+						btn.setAttribute('aria-label', isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+					}
+				}
+
+				// Aplica el tema antes del primer paint (evita parpadeo)
+				applyTheme();
+
+				// Event delegation: un único listener en document que sobrevive a las
+				// navegaciones de ViewTransitions y funciona en TODAS las páginas
+				document.addEventListener('click', function (e) {
+					var btn = e.target && e.target.closest && e.target.closest('#theme-toggle');
+					if (!btn) return;
+					var isDark = document.documentElement.classList.contains('dark');
+					var next = isDark ? 'light' : 'dark';
+					document.documentElement.classList.remove('dark', 'light');
+					document.documentElement.classList.add(next);
+					try { localStorage.setItem('theme', next); } catch (err) {}
+					syncToggleUI();
+				});
+
+				// Reaplicar tema antes de pintar el DOM nuevo en cada navegación SPA
+				document.addEventListener('astro:after-swap', function () {
+					applyTheme();
+					syncToggleUI();
+				});
+
+				// Sincronizar el icono cuando la página termina de cargar
+				document.addEventListener('astro:page-load', syncToggleUI);
 			})();
 		</script>
 		<meta name="viewport" content="width=device-width" />
