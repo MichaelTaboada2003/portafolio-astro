@@ -184,7 +184,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'EmotiSpeech — Clasificador de Emociones de Voz',
         slug: 'emotispeech',
-        description: 'Aplicación web de IA emocional y toma de decisiones para atención al cliente. Clasifica emociones en audio de voz con 0.86 balanced accuracy y traduce los resultados en métricas financieras mediante simulaciones Monte Carlo para justificar el despliegue del modelo en entornos de negocio.',
+        description: 'Aplicación web de IA emocional y toma de decisiones para atención al cliente. Clasifica emociones en audio de voz con alta precisión y traduce los resultados en métricas financieras mediante simulaciones Monte Carlo para justificar el despliegue del modelo en entornos de negocio.',
         longDescription: `EmotiSpeech es un proyecto integrado de Machine Learning y Toma de Decisiones para clasificación de emociones en audio de voz.
 
 **Capa de Machine Learning:**
