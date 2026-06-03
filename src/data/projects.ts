@@ -136,6 +136,11 @@ export const TAGS = {
         class: 'bg-[#F7931E]/25 text-[#F7931E]',
         icon: null,
     },
+    FLASK: {
+        name: 'Flask',
+        class: 'bg-white/15 text-white',
+        icon: null,
+    },
 }
 
 export interface Project {
@@ -195,6 +200,32 @@ export const PROJECTS: Project[] = [
         image: '/gym-tracker.png',
         tags: [TAGS.REACT_NATIVE, TAGS.EXPO, TAGS.TYPESCRIPT],
         github: 'https://github.com/MichaelTaboada2003/gym-tracker',
+    },
+    {
+        title: 'EmotiSpeech — Clasificador de Emociones de Voz',
+        slug: 'emotispeech',
+        description: 'Clasificador de emociones de voz (Enojo / Feliz / Tranquilidad / Tristeza) con 0.86 de balanced accuracy honesta, usando wav2vec2 fine-tuneado para SER. Incluye módulo de toma de decisiones para despliegue en call-centers con simulador de VPN, análisis Monte Carlo y recomendación GO/NO-GO.',
+        longDescription: `EmotiSpeech es un proyecto integrado de Machine Learning y Toma de Decisiones para clasificación de emociones en audio de voz.
+
+**Capa de Machine Learning:**
+- Encoder audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim (1024 dims) fine-tuneado para SER
+- 6 clasificadores clásicos sobre embeddings emocionales (LogReg, SVM lineal, SVM RBF, RF, KNN)
+- Balanced accuracy honesta 0.86 en 4 clases (0.92 en 2 clases, 0.97 en 3 clases)
+- Evaluación leave-one-audio-out honesta y leave-one-collector-out
+
+**Capa de Toma de Decisiones:**
+- Simulador de despliegue en call-center con matriz de costos editable
+- Curva ROC con umbral óptimo que maximiza el VPN mensual
+- Análisis de sensibilidad (tornado ±30%) y Monte Carlo (2 000 escenarios)
+- Recomendación automática GO / GO condicional / NO-GO con justificación cuantitativa
+
+**Stack tecnológico:**
+- Backend: Python 3, Flask, scikit-learn, transformers (HuggingFace)
+- Frontend: HTML/CSS/JS (simulador de decisiones en cliente)
+- ML: wav2vec2, librosa, numpy, scipy`,
+        image: '/clasificador-audios.png',
+        tags: [TAGS.PYTHON, TAGS.FLASK, TAGS.SCIKIT, TAGS.OPENCV],
+        github: 'https://github.com/MichaelTaboada2003/EmotiSpeech',
         featured: true
     },
     {
@@ -337,6 +368,32 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
 - Calendario interactivo`,
         image: '/novenas.png',
         tags: [TAGS.NEXTJS, TAGS.TAILWIND, TAGS.TYPESCRIPT],
+    },
+    {
+        title: 'EmotiSpeech — Clasificador de Emociones de Voz',
+        slug: 'emotispeech',
+        description: 'Clasificador de emociones de voz con 0.86 de balanced accuracy honesta usando wav2vec2 fine-tuneado. Incluye módulo de toma de decisiones con simulador de VPN, Monte Carlo y recomendación GO/NO-GO para despliegue en call-centers.',
+        longDescription: `EmotiSpeech es un proyecto integrado de Machine Learning y Toma de Decisiones para clasificación de emociones en audio de voz.
+
+**Capa de Machine Learning:**
+- Encoder audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim (1024 dims) fine-tuneado para SER
+- 6 clasificadores clásicos sobre embeddings emocionales (LogReg, SVM lineal, SVM RBF, RF, KNN)
+- Balanced accuracy honesta 0.86 en 4 clases (0.92 en 2 clases, 0.97 en 3 clases)
+- Evaluación leave-one-audio-out honesta y leave-one-collector-out
+
+**Capa de Toma de Decisiones:**
+- Simulador de despliegue en call-center con matriz de costos editable
+- Curva ROC con umbral óptimo que maximiza el VPN mensual
+- Análisis de sensibilidad (tornado ±30%) y Monte Carlo (2 000 escenarios)
+- Recomendación automática GO / GO condicional / NO-GO con justificación cuantitativa
+
+**Stack tecnológico:**
+- Backend: Python 3, Flask, scikit-learn, transformers (HuggingFace)
+- Frontend: HTML/CSS/JS (simulador de decisiones en cliente)
+- ML: wav2vec2, librosa, numpy, scipy`,
+        image: '/clasificador-audios.png',
+        tags: [TAGS.PYTHON, TAGS.FLASK, TAGS.SCIKIT, TAGS.OPENCV],
+        github: 'https://github.com/MichaelTaboada2003/EmotiSpeech',
     },
     {
         title: 'Sensado y Modelado de Sistemas Físicos',
