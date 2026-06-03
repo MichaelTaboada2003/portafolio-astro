@@ -15,6 +15,7 @@ import SupabaseIcon from '../icons/SupabaseIcon.astro';
 import GroqIcon from '../icons/GroqIcon.astro';
 import VueIcon from '../icons/VueIcon.astro';
 import FlaskIcon from '../icons/FlaskIcon.astro';
+import FastAPIIcon from '../icons/FastAPIIcon.astro';
 
 export const TAGS = {
     PYTHON: {
@@ -125,7 +126,7 @@ export const TAGS = {
     FASTAPI: {
         name: 'FastAPI',
         class: 'bg-[#009688]/25 text-[#009688]',
-        icon: null,
+        icon: FastAPIIcon,
     },
     OPENCV: {
         name: 'OpenCV',
