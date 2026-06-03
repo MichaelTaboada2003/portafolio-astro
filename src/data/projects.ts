@@ -60,7 +60,7 @@ export const TAGS = {
     },
     NEXTJS: {
         name: 'Next.js',
-        class: 'bg-white/15 text-white',
+        class: 'bg-[#111]/15 text-[#111] dark:bg-white/15 dark:text-white',
         icon: NextjsIcon,
     },
     ASTRO: {
@@ -115,12 +115,12 @@ export const TAGS = {
     },
     THREEJS: {
         name: 'Three.js',
-        class: 'bg-white/15 text-white',
+        class: 'bg-[#111]/15 text-[#111] dark:bg-white/15 dark:text-white',
         icon: ThreejsIcon,
     },
     EXPO: {
         name: 'Expo',
-        class: 'bg-[#1a1a2e]/60 text-[#c4c4c4]',
+        class: 'bg-[#111]/10 text-[#111] dark:bg-[#1a1a2e]/60 dark:text-[#c4c4c4]',
         icon: ExpoIcon,
     },
     FASTAPI: {
@@ -140,7 +140,7 @@ export const TAGS = {
     },
     FLASK: {
         name: 'Flask',
-        class: 'bg-white/15 text-white',
+        class: 'bg-[#111]/15 text-[#111] dark:bg-white/15 dark:text-white',
         icon: FlaskIcon,
     },
 }
