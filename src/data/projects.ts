@@ -14,6 +14,7 @@ import NodejsIcon from '../icons/NodejsIcon.astro';
 import SupabaseIcon from '../icons/SupabaseIcon.astro';
 import GroqIcon from '../icons/GroqIcon.astro';
 import VueIcon from '../icons/VueIcon.astro';
+import FlaskIcon from '../icons/FlaskIcon.astro';
 
 export const TAGS = {
     PYTHON: {
@@ -139,7 +140,7 @@ export const TAGS = {
     FLASK: {
         name: 'Flask',
         class: 'bg-white/15 text-white',
-        icon: null,
+        icon: FlaskIcon,
     },
 }
 
@@ -224,7 +225,7 @@ export const PROJECTS: Project[] = [
 - Frontend: HTML/CSS/JS (simulador de decisiones en cliente)
 - ML: wav2vec2, librosa, numpy, scipy`,
         image: '/clasificador-audios.png',
-        tags: [TAGS.PYTHON, TAGS.FLASK, TAGS.SCIKIT, TAGS.OPENCV],
+        tags: [TAGS.PYTHON, TAGS.FLASK],
         github: 'https://github.com/MichaelTaboada2003/EmotiSpeech',
         featured: true
     },
@@ -392,7 +393,7 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
 - Frontend: HTML/CSS/JS (simulador de decisiones en cliente)
 - ML: wav2vec2, librosa, numpy, scipy`,
         image: '/clasificador-audios.png',
-        tags: [TAGS.PYTHON, TAGS.FLASK, TAGS.SCIKIT, TAGS.OPENCV],
+        tags: [TAGS.PYTHON, TAGS.FLASK],
         github: 'https://github.com/MichaelTaboada2003/EmotiSpeech',
     },
     {
