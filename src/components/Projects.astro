@@ -1,12 +1,12 @@
 ---
-import { getFeaturedProjects, TAGS } from '../data/projects';
+import { getFeaturedProjects } from '../data/projects';
 import GithubIcon from '../icons/GithubIcon.astro';
 
 const FEATURED_PROJECTS = getFeaturedProjects();
 ---
 
 <div class="projects-container">
-    {FEATURED_PROJECTS.map(({ image, title, description, tags, github, preview }) => (
+    {FEATURED_PROJECTS.map(({ image, title, description, tags, github, preview, slug }) => (
         <article class="project-card">
             <!-- Image Section -->
             <div class="project-image-container">
@@ -53,6 +53,11 @@ const FEATURED_PROJECTS = getFeaturedProjects();
                             <span>Preview</span>
                         </a>
                     )}
+                    <a href={`/proyecto/${slug}`} class="project-link-arrow" title="Ver detalles">
+                        <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </article>
@@ -203,6 +208,7 @@ const FEATURED_PROJECTS = getFeaturedProjects();
         flex-wrap: wrap;
         gap: 0.75rem;
         margin-top: 0.5rem;
+        align-items: center;
     }
 
     .project-link {
@@ -223,6 +229,32 @@ const FEATURED_PROJECTS = getFeaturedProjects();
     .project-link:hover {
         background: color-mix(in srgb, var(--color-surface) 80%, transparent);
         border-color: var(--color-accent);
+    }
+
+    .project-link-arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        margin-left: auto;
+        background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+        border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+        border-radius: 50%;
+        color: var(--color-accent);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .project-link-arrow:hover {
+        background: color-mix(in srgb, var(--color-accent) 20%, transparent);
+        border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+        transform: translateX(3px);
+    }
+
+    .arrow-icon {
+        width: 1.1rem;
+        height: 1.1rem;
     }
 
     .link-icon {

@@ -255,6 +255,7 @@ const ALL_PROJECTS = getAllProjects();
         border-radius: 16px;
         overflow: hidden;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
     }
 
     .project-card:hover {
@@ -266,7 +267,32 @@ const ALL_PROJECTS = getAllProjects();
     }
 
     .project-card.featured {
-        border-color: color-mix(in srgb, var(--color-accent) 15%, transparent);
+        border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 10%, transparent);
+    }
+
+    .project-card.featured::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            var(--color-accent),
+            transparent
+        );
+        border-radius: 16px 16px 0 0;
+    }
+
+    .project-card.featured:hover {
+        border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+        box-shadow:
+            0 20px 40px -15px rgba(0, 0, 0, 0.5),
+            0 0 0 1px color-mix(in srgb, var(--color-accent) 20%, transparent),
+            var(--shadow-accent-glow);
     }
 
     /* Image */

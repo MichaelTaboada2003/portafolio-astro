@@ -157,13 +157,13 @@ export interface Project {
     featured?: boolean;
 }
 
-// Proyectos destacados para la página principal (los 3 originales)
-export const PROJECTS: Project[] = [
+// Single source of truth — mark featured: true to appear on the homepage
+export const ALL_PROJECTS: Project[] = [
     {
         title: 'Networking App',
         slug: 'networking',
-        description: 'Aplicación web para gestión de contactos profesionales y networking. Incluye autenticación de usuarios, gestión de perfiles, dashboard personalizado y exportación de datos. Con +55 usuarios',
-        longDescription: `Networking App es una plataforma web completa diseñada para profesionales que buscan optimizar sus conexiones comerciales. 
+        description: 'Aplicación web para gestión de contactos profesionales y networking. Incluye autenticación de usuarios, gestión de perfiles, dashboard personalizado y exportación de datos. Con +55 usuarios.',
+        longDescription: `Networking App es una plataforma web completa diseñada para profesionales que buscan optimizar sus conexiones comerciales.
 
 **Características principales:**
 - Sistema de autenticación seguro con Supabase
@@ -179,7 +179,80 @@ export const PROJECTS: Project[] = [
         image: '/networking.png',
         tags: [TAGS.REACT, TAGS.TAILWIND, TAGS.SUPABASE, TAGS.GROQ],
         preview: 'https://networking-livid.vercel.app/',
-        featured: true
+        featured: true,
+    },
+    {
+        title: 'EmotiSpeech — Clasificador de Emociones de Voz',
+        slug: 'emotispeech',
+        description: 'Aplicación web de IA emocional y toma de decisiones para atención al cliente. Clasifica emociones en audio de voz con 0.86 balanced accuracy y traduce los resultados en métricas financieras mediante simulaciones Monte Carlo para justificar el despliegue del modelo en entornos de negocio.',
+        longDescription: `EmotiSpeech es un proyecto integrado de Machine Learning y Toma de Decisiones para clasificación de emociones en audio de voz.
+
+**Capa de Machine Learning:**
+- Encoder audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim (1024 dims) fine-tuneado para SER
+- 6 clasificadores clásicos sobre embeddings emocionales (LogReg, SVM lineal, SVM RBF, RF, KNN)
+- Balanced accuracy honesta 0.86 en 4 clases (0.92 en 2 clases, 0.97 en 3 clases)
+- Evaluación leave-one-audio-out honesta y leave-one-collector-out
+
+**Capa de Toma de Decisiones:**
+- Simulador de despliegue en call-center con matriz de costos editable
+- Curva ROC con umbral óptimo que maximiza el VPN mensual
+- Análisis de sensibilidad (tornado ±30%) y Monte Carlo (2 000 escenarios)
+- Recomendación automática GO / GO condicional / NO-GO con justificación cuantitativa
+
+**Stack tecnológico:**
+- Backend: Python 3, Flask, scikit-learn, transformers (HuggingFace)
+- Frontend: HTML/CSS/JS (simulador de decisiones en cliente)
+- ML: wav2vec2, librosa, numpy, scipy`,
+        image: '/clasificador-audios.png',
+        tags: [TAGS.PYTHON, TAGS.FLASK],
+        github: 'https://github.com/MichaelTaboada2003/audio-ml-classifier',
+        featured: true,
+    },
+    {
+        title: 'A World Away - NASA 2025',
+        slug: 'a-world-away',
+        description: 'Proyecto desarrollado para el NASA Space Apps Challenge 2025. Exploración de mundos lejanos y visualización de datos astronómicos con IA.',
+        longDescription: `A World Away es un proyecto innovador desarrollado para el NASA Space Apps Challenge 2025, enfocado en la exploración y visualización de exoplanetas.
+
+**Características principales:**
+- Visualización 3D interactiva de sistemas estelares
+- Integración de datos astronómicos reales de la NASA
+- Modelos de IA para predicción de habitabilidad
+- Interfaz multilingüe (español e inglés)
+- Simulaciones de condiciones atmosféricas
+
+**Stack tecnológico:**
+- Vue.js para la interfaz de usuario
+- Three.js para visualizaciones 3D
+- Python para procesamiento de datos
+- Groq para análisis con IA`,
+        image: '/AWorldAway.png',
+        tags: [TAGS.PYTHON, TAGS.VUE, TAGS.THREEJS, TAGS.GROQ],
+        github: 'https://github.com/MichaelTaboada2003/AWorldAway_Nasa2025',
+        preview: 'https://a-world-away-nasa2025-web.vercel.app/es-ES',
+        featured: true,
+    },
+    {
+        title: 'Shainy',
+        slug: 'shainy',
+        description: 'Plataforma e-commerce de gestión de ventas con sincronización de inventario en tiempo real y checkout dinámico vía WhatsApp.',
+        longDescription: `Shainy es una plataforma e-commerce completa diseñada para pequeños y medianos comercios que buscan digitalizar sus ventas.
+
+**Características principales:**
+- Panel de administración completo con Supabase
+- Sincronización en tiempo real con Google Sheets
+- Catálogo de productos dinámico
+- Checkout integrado con WhatsApp
+- Generación automática de PDFs de catálogos
+- Gestión de inventario en tiempo real
+
+**Stack tecnológico:**
+- Next.js 14 con App Router
+- Supabase para base de datos y autenticación
+- Tailwind CSS para estilos
+- TypeScript para tipado estático`,
+        image: '/shainy.png',
+        tags: [TAGS.NEXTJS, TAGS.SUPABASE, TAGS.TAILWIND, TAGS.TYPESCRIPT],
     },
     {
         title: 'Gym Tracker',
@@ -204,120 +277,6 @@ export const PROJECTS: Project[] = [
         github: 'https://github.com/MichaelTaboada2003/gym-tracker',
     },
     {
-        title: 'EmotiSpeech — Clasificador de Emociones de Voz',
-        slug: 'emotispeech',
-        description: 'Clasificador de emociones de voz (Enojo / Feliz / Tranquilidad / Tristeza) con 0.86 de balanced accuracy honesta, usando wav2vec2 fine-tuneado para SER. Incluye módulo de toma de decisiones para despliegue en call-centers con simulador de VPN, análisis Monte Carlo y recomendación GO/NO-GO.',
-        longDescription: `EmotiSpeech es un proyecto integrado de Machine Learning y Toma de Decisiones para clasificación de emociones en audio de voz.
-
-**Capa de Machine Learning:**
-- Encoder audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim (1024 dims) fine-tuneado para SER
-- 6 clasificadores clásicos sobre embeddings emocionales (LogReg, SVM lineal, SVM RBF, RF, KNN)
-- Balanced accuracy honesta 0.86 en 4 clases (0.92 en 2 clases, 0.97 en 3 clases)
-- Evaluación leave-one-audio-out honesta y leave-one-collector-out
-
-**Capa de Toma de Decisiones:**
-- Simulador de despliegue en call-center con matriz de costos editable
-- Curva ROC con umbral óptimo que maximiza el VPN mensual
-- Análisis de sensibilidad (tornado ±30%) y Monte Carlo (2 000 escenarios)
-- Recomendación automática GO / GO condicional / NO-GO con justificación cuantitativa
-
-**Stack tecnológico:**
-- Backend: Python 3, Flask, scikit-learn, transformers (HuggingFace)
-- Frontend: HTML/CSS/JS (simulador de decisiones en cliente)
-- ML: wav2vec2, librosa, numpy, scipy`,
-        image: '/clasificador-audios.png',
-        tags: [TAGS.PYTHON, TAGS.FLASK],
-        github: 'https://github.com/MichaelTaboada2003/EmotiSpeech',
-        featured: true
-    },
-    {
-        title: 'A World Away - NASA 2025',
-        slug: 'a-world-away',
-        description: 'Proyecto desarrollado para el NASA Space Apps Challenge 2025. Exploración de mundos lejanos y visualización de datos astronómicos con IA.',
-        longDescription: `A World Away es un proyecto innovador desarrollado para el NASA Space Apps Challenge 2025, enfocado en la exploración y visualización de exoplanetas.
-
-**Características principales:**
-- Visualización 3D interactiva de sistemas estelares
-- Integración de datos astronómicos reales de la NASA
-- Modelos de IA para predicción de habitabilidad
-- Interfaz multilingüe (español e inglés)
-- Simulaciones de condiciones atmosféricas
-
-**Stack tecnológico:**
-- Vue.js para la interfaz de usuario
-- Three.js para visualizaciones 3D
-- Python para procesamiento de datos
-- Groq para análisis con IA`,
-        image: '/AWorldAway.png',
-        tags: [TAGS.PYTHON, TAGS.VUE, TAGS.THREEJS, TAGS.GROQ],
-        github: 'https://github.com/MichaelTaboada2003/AWorldAway_Nasa2025',
-        preview: 'https://a-world-away-nasa2025-web.vercel.app/es-ES',
-        featured: true
-    },
-]
-
-// Los 6 proyectos seleccionados para "Todos los proyectos"
-export const ALL_SELECTED_PROJECTS: Project[] = [
-    {
-        title: 'Shainy',
-        slug: 'shainy',
-        description: 'Plataforma e-commerce de gestión de ventas con sincronización de inventario en tiempo real y checkout dinámico vía WhatsApp.',
-        longDescription: `Shainy es una plataforma e-commerce completa diseñada para pequeños y medianos comercios que buscan digitalizar sus ventas.
-
-**Características principales:**
-- Panel de administración completo con Supabase
-- Sincronización en tiempo real con Google Sheets
-- Catálogo de productos dinámico
-- Checkout integrado con WhatsApp
-- Generación automática de PDFs de catálogos
-- Gestión de inventario en tiempo real
-
-**Stack tecnológico:**
-- Next.js 14 con App Router
-- Supabase para base de datos y autenticación
-- Tailwind CSS para estilos
-- TypeScript para tipado estático`,
-        image: '/shainy.png',
-        tags: [TAGS.NEXTJS, TAGS.SUPABASE, TAGS.TAILWIND, TAGS.TYPESCRIPT],
-    },
-    {
-        title: 'Networking App',
-        slug: 'networking',
-        description: 'Aplicación web para gestión de contactos profesionales y networking. Incluye autenticación de usuarios, gestión de perfiles, dashboard personalizado y exportación de datos. Con +55 usuarios',
-        longDescription: `Networking App es una plataforma web completa diseñada para profesionales que buscan optimizar sus conexiones comerciales.
-
-**Características principales:**
-- Sistema de autenticación seguro con Supabase
-- Gestión de perfiles de contactos con información detallada
-- Dashboard personalizado con métricas y estadísticas
-- Integración de IA con Groq para sugerencias inteligentes
-- Exportación de datos en múltiples formatos
-
-**Logros:**
-- +55 usuarios activos`,
-        image: '/networking.png',
-        tags: [TAGS.REACT, TAGS.TAILWIND, TAGS.SUPABASE, TAGS.GROQ],
-        preview: 'https://networking-livid.vercel.app/',
-        featured: true
-    },
-    {
-        title: 'Gym Tracker',
-        slug: 'gym-tracker',
-        description: 'Aplicación móvil para seguimiento de entrenamientos en el gimnasio. Permite registrar ejercicios, series, repeticiones y peso. Incluye estadísticas de progreso y visualización de datos.',
-        longDescription: `Gym Tracker es una aplicación móvil para el seguimiento completo de rutinas de gimnasio.
-
-**Características principales:**
-- Registro detallado de ejercicios
-- Historial de entrenamientos
-- Estadísticas de progreso
-- Rutinas personalizables
-- Modo offline`,
-        image: '/gym-tracker.png',
-        tags: [TAGS.REACT_NATIVE, TAGS.EXPO, TAGS.TYPESCRIPT],
-        github: 'https://github.com/MichaelTaboada2003/gym-tracker',
-        featured: true
-    },
-    {
         title: 'Exosky - NASA Space Apps 2024',
         slug: 'exosky',
         description: 'Visualizador interactivo del cielo nocturno desde la superficie de exoplanetas. Desarrollado para NASA Space Apps 2024.',
@@ -340,23 +299,6 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
         github: 'https://github.com/MichaelTaboada2003/Exosky-Nasa-Space-App-2024',
     },
     {
-        title: 'A World Away - NASA 2025',
-        slug: 'a-world-away',
-        description: 'Proyecto desarrollado para el NASA Space Apps Challenge 2025. Exploración de mundos lejanos y visualización de datos astronómicos con IA.',
-        longDescription: `A World Away es un proyecto para el NASA Space Apps Challenge 2025 enfocado en la exploración exoplanetaria.
-
-**Características principales:**
-- Visualización 3D de sistemas estelares
-- Datos astronómicos de la NASA
-- Modelos de IA para habitabilidad
-- Interfaz multilingüe`,
-        image: '/AWorldAway.png',
-        tags: [TAGS.VUE, TAGS.PYTHON, TAGS.THREEJS, TAGS.GROQ],
-        github: 'https://github.com/MichaelTaboada2003/AWorldAway_Nasa2025',
-        preview: 'https://a-world-away-nasa2025-web.vercel.app/es-ES',
-        featured: true
-    },
-    {
         title: 'Novenas 2025',
         slug: 'novenas',
         description: 'Aplicación web para el seguimiento de asistencias de las Novenas navideñas con inteligencia artificial.',
@@ -370,32 +312,6 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
 - Calendario interactivo`,
         image: '/novenas.png',
         tags: [TAGS.NEXTJS, TAGS.TAILWIND, TAGS.TYPESCRIPT],
-    },
-    {
-        title: 'EmotiSpeech — Clasificador de Emociones de Voz',
-        slug: 'emotispeech',
-        description: 'Clasificador de emociones de voz con 0.86 de balanced accuracy honesta usando wav2vec2 fine-tuneado. Incluye módulo de toma de decisiones con simulador de VPN, Monte Carlo y recomendación GO/NO-GO para despliegue en call-centers.',
-        longDescription: `EmotiSpeech es un proyecto integrado de Machine Learning y Toma de Decisiones para clasificación de emociones en audio de voz.
-
-**Capa de Machine Learning:**
-- Encoder audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim (1024 dims) fine-tuneado para SER
-- 6 clasificadores clásicos sobre embeddings emocionales (LogReg, SVM lineal, SVM RBF, RF, KNN)
-- Balanced accuracy honesta 0.86 en 4 clases (0.92 en 2 clases, 0.97 en 3 clases)
-- Evaluación leave-one-audio-out honesta y leave-one-collector-out
-
-**Capa de Toma de Decisiones:**
-- Simulador de despliegue en call-center con matriz de costos editable
-- Curva ROC con umbral óptimo que maximiza el VPN mensual
-- Análisis de sensibilidad (tornado ±30%) y Monte Carlo (2 000 escenarios)
-- Recomendación automática GO / GO condicional / NO-GO con justificación cuantitativa
-
-**Stack tecnológico:**
-- Backend: Python 3, Flask, scikit-learn, transformers (HuggingFace)
-- Frontend: HTML/CSS/JS (simulador de decisiones en cliente)
-- ML: wav2vec2, librosa, numpy, scipy`,
-        image: '/clasificador-audios.png',
-        tags: [TAGS.PYTHON, TAGS.FLASK],
-        github: 'https://github.com/MichaelTaboada2003/EmotiSpeech',
     },
     {
         title: 'Sensado y Modelado de Sistemas Físicos',
@@ -421,11 +337,11 @@ export const ALL_SELECTED_PROJECTS: Project[] = [
 - ML: scikit-learn, rasterio, pystac-client`,
         image: '/hub-sensado.png',
         tags: [TAGS.PYTHON, TAGS.REACT, TAGS.FASTAPI, TAGS.OPENCV, TAGS.TYPESCRIPT, TAGS.SCIKIT],
-        github: 'https://github.com/MichaelTaboada2003/Sensado-y-Modelado-de-Sistemas-Fisicos',
+        github: 'https://github.com/MichaelTaboada2003/physics-sensing-automation',
     },
 ]
 
-export const getFeaturedProjects = () => PROJECTS.filter(p => p.featured);
-export const getAllProjects = () => ALL_SELECTED_PROJECTS;
-export const getProjectBySlug = (slug: string) => ALL_SELECTED_PROJECTS.find(p => p.slug === slug);
-
+// Derived helpers — no duplication
+export const getFeaturedProjects = () => ALL_PROJECTS.filter(p => p.featured);
+export const getAllProjects = () => ALL_PROJECTS;
+export const getProjectBySlug = (slug: string) => ALL_PROJECTS.find(p => p.slug === slug);
