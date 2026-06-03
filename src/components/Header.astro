@@ -28,22 +28,23 @@ const navItems = [
 <header
   class="fixed top-0 z-10 flex items-center justify-center w-full mx-auto mt-2"
 >
-  <div class="flex items-center gap-2">
-    <nav
-      class="flex px-3 text-sm font-medium rounded-full text-gray-200 justify-center items-center"
-    >
-      {
-        navItems.map((link) => (
-          <a
-            class="nav-link relative block px-2 py-3 transition min-h-[44px] flex items-center"
-            aria-label={link.label}
-            href={link.url}
-          >
-            {link.title}
-          </a>
-        ))
-      }
-    </nav>
+  <nav
+    class="flex px-3 text-sm font-medium rounded-full justify-center items-center"
+    style="color: var(--color-text);"
+  >
+    {
+      navItems.map((link) => (
+        <a
+          class="nav-link relative block px-2 py-3 transition min-h-[44px] flex items-center"
+          aria-label={link.label}
+          href={link.url}
+        >
+          {link.title}
+        </a>
+      ))
+    }
+  </nav>
+  <div class="ml-3">
     <ThemeToggle />
   </div>
 </header>
@@ -98,8 +99,9 @@ const navItems = [
 
   @keyframes nav-shadown {
     to {
-      @apply shadow-lg ring-1 backdrop-blur ring-white/10;
-      background-color: color-mix(in srgb, var(--color-surface) 80%, transparent);
+      @apply shadow-lg ring-1 backdrop-blur;
+      ring-color: color-mix(in srgb, var(--color-border) 50%, transparent);
+      background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
     }
   }
 
