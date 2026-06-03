@@ -93,13 +93,13 @@ import AboutMe from "../components/AboutMe.astro";
 				object-fit: cover;
 				position: relative;
 				z-index: 2;
-				border: 3px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+				border: 2px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
 				animation: heroImageFadeIn 0.8s ease-out forwards;
 			}
 
 			.hero-image-ring {
 				position: absolute;
-				inset: -4px;
+				inset: -2px;
 				border-radius: 50%;
 				background: conic-gradient(
 					from 0deg,
@@ -110,7 +110,7 @@ import AboutMe from "../components/AboutMe.astro";
 				);
 				z-index: 1;
 				animation: heroRingSpin 8s linear infinite;
-				opacity: 0.7;
+				opacity: 0.6;
 			}
 
 			.hero-image-glow {
