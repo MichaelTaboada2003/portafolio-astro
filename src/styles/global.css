@@ -1,10 +1,8 @@
 /* ==========================================================================
-   global.css — Reset, variables CSS y utilidades base
+   global.css — Sistema de diseño «Instrumento»
+   Un panel de lectura: campo profundo, ámbar de señal, cian de medición.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. Box-sizing reset (siempre activo)
-   -------------------------------------------------------------------------- */
 *,
 *::before,
 *::after {
@@ -12,85 +10,379 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. Variables CSS — Tema oscuro (por defecto)
+   1. Tokens — tema oscuro (por defecto)
    -------------------------------------------------------------------------- */
 :root,
 .dark {
-  --color-bg:           #0a0a0f;
-  --color-surface:      #111118;
-  --color-border:       #1e1e2e;
-  --color-text:         #f0f0f5;
-  --color-text-muted:   #6b7280;
-  --color-accent:       #fbbf24;
-  --color-accent-light: #fde68a;
-  --color-accent-dark:  #d97706;
-  --shadow-focus:       0 0 0 3px rgba(251,191,36,0.5);
-  --shadow-card:        0 10px 30px -10px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
-  --shadow-card-hover:  0 20px 40px -15px rgba(0,0,0,0.5), 0 0 0 1px rgba(251,191,36,0.1);
-  --shadow-accent-glow: 0 10px 30px -10px rgba(251,191,36,0.3);
+  /* Superficies: campo profundo con sesgo azul-violeta, nunca negro neutro */
+  --ink:        #06070c;
+  --ink-2:      #0b0d15;
+  --ink-3:      #111420;
+  --ink-4:      #171b2a;
+  --rule:       #1c2030;
+  --rule-soft:  #14172250;
+
+  /* Texto */
+  --paper:      #e9eaf2;
+  --paper-2:    #9096ab;
+  --paper-3:    #747b91;
+
+  /* Señal: la identidad. Enlaces, estado activo, acentos humanos. */
+  --signal:     #ffb020;
+  --signal-2:   #ffd98a;
+  --signal-3:   #b46f00;
+
+  /* Lectura: exclusivo de valores medidos. Nunca decorativo. */
+  --reading:    #54d6c4;
+
+  --grain-opacity: 0.035;
+  --glow:       rgba(255, 176, 32, 0.16);
+  --glass:      rgba(11, 13, 21, 0.78);
+
+  --shadow-1:   0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:   0 12px 32px -12px rgba(0,0,0,.7);
+  --shadow-3:   0 32px 64px -24px rgba(0,0,0,.8);
+  --focus-ring: 0 0 0 2px var(--ink), 0 0 0 4px var(--signal);
+
   color-scheme: dark;
 }
 
 /* --------------------------------------------------------------------------
-   3. Variables CSS — Tema claro
+   2. Tokens — tema claro (papel técnico frío, acento violeta)
    -------------------------------------------------------------------------- */
 .light {
-  --color-bg:           #f4f4f8;
-  --color-surface:      #ffffff;
-  --color-border:       #d1d5db;
-  --color-text:         #111827;
-  --color-text-muted:   #4b5563;
-  --color-accent:       #4f46e5;
-  --color-accent-light: #6366f1;
-  --color-accent-dark:  #3730a3;
-  --shadow-focus:       0 0 0 3px rgba(79,70,229,0.35);
-  --shadow-card:        0 2px 8px -2px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05);
-  --shadow-card-hover:  0 8px 24px -6px rgba(0,0,0,0.12), 0 0 0 1px rgba(79,70,229,0.12);
-  --shadow-accent-glow: 0 6px 20px -6px rgba(79,70,229,0.25);
+  --ink:        #eceef3;
+  --ink-2:      #ffffff;
+  --ink-3:      #f5f6fa;
+  --ink-4:      #e7eaf1;
+  --rule:       #d5d9e3;
+  --rule-soft:  #d5d9e380;
+
+  --paper:      #0d1017;
+  --paper-2:    #4a5163;
+  --paper-3:    #5d6479;
+
+  --signal:     #5b2ee0;
+  --signal-2:   #7c4dff;
+  --signal-3:   #3d1a9e;
+
+  --reading:    #0e9384;
+
+  --grain-opacity: 0.02;
+  --glow:       rgba(91, 46, 224, 0.12);
+  --glass:      rgba(255, 255, 255, 0.8);
+
+  --shadow-1:   0 1px 2px rgba(16,20,32,.06);
+  --shadow-2:   0 12px 32px -14px rgba(16,20,32,.18);
+  --shadow-3:   0 32px 64px -28px rgba(16,20,32,.22);
+  --focus-ring: 0 0 0 2px var(--ink), 0 0 0 4px var(--signal);
+
   color-scheme: light;
 }
 
 /* --------------------------------------------------------------------------
-   4. Override @font-face para font-display: swap (evita FOIT)
+   3. Tipografía — tres roles, tres voces
+      display  Instrument Serif  → el nombre, los números de sección, la cita
+      body     Onest             → prosa
+      mono     JetBrains Mono    → toda la telemetría: etiquetas, fechas, datos
    -------------------------------------------------------------------------- */
-@font-face {
-  font-family: 'Onest Variable';
-  font-display: swap;
+:root {
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-body:    'Onest Variable', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Escala fluida */
+  --step--2: clamp(0.68rem, 0.66rem + 0.10vw, 0.74rem);
+  --step--1: clamp(0.80rem, 0.77rem + 0.14vw, 0.88rem);
+  --step-0:  clamp(0.95rem, 0.91rem + 0.20vw, 1.06rem);
+  --step-1:  clamp(1.13rem, 1.06rem + 0.34vw, 1.33rem);
+  --step-2:  clamp(1.35rem, 1.23rem + 0.58vw, 1.78rem);
+  --step-3:  clamp(1.62rem, 1.41rem + 1.02vw, 2.37rem);
+  --step-4:  clamp(1.94rem, 1.60rem + 1.68vw, 3.16rem);
+  --step-5:  clamp(2.33rem, 1.79rem + 2.68vw, 4.21rem);
+  --step-6:  clamp(2.80rem, 1.95rem + 4.24vw, 5.61rem);
+  --step-7:  clamp(3.36rem, 2.05rem + 6.53vw, 7.48rem);
+
+  /* Ritmo vertical */
+  --gap-xs:  0.5rem;
+  --gap-sm:  0.875rem;
+  --gap-md:  1.5rem;
+  --gap-lg:  2.5rem;
+  --gap-xl:  clamp(3.5rem, 2.5rem + 4vw, 6rem);
+  --gap-2xl: clamp(5rem, 3rem + 8vw, 10rem);
+
+  /* Medidas del riel de instrumento */
+  --rail-w: 68px;
+  --shell:  min(100% - 2.5rem, 68rem);
 }
 
+@font-face { font-family: 'Onest Variable'; font-display: swap; }
+@font-face { font-family: 'Instrument Serif'; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono Variable'; font-display: swap; }
+
 /* --------------------------------------------------------------------------
-   5. Estilos base del body
+   4. Base
    -------------------------------------------------------------------------- */
+html {
+  font-family: var(--font-body);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: 'Onest Variable', system-ui, sans-serif;
-  transition: background-color 300ms ease, color 300ms ease;
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background-color 400ms cubic-bezier(.4,0,.2,1),
+              color 400ms cubic-bezier(.4,0,.2,1);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+p { margin: 0; text-wrap: pretty; }
+
+a { color: inherit; text-decoration: none; }
+
+img { max-width: 100%; display: block; }
+
+::selection {
+  background: var(--signal);
+  color: var(--ink);
 }
 
 /* --------------------------------------------------------------------------
-   6. Accesibilidad — foco visible global (Requisito 8.2)
+   5. Clases tipográficas
+   -------------------------------------------------------------------------- */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+.display em {
+  font-style: italic;
+  color: var(--signal);
+}
+
+/* Telemetría: toda etiqueta, fecha, índice o unidad usa esta voz */
+.tele {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Valor medido — el único uso legítimo del cian */
+.value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--reading);
+  letter-spacing: -0.01em;
+}
+
+.lede {
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--paper-2);
+  max-width: 34ch;
+}
+
+/* --------------------------------------------------------------------------
+   6. Contenedor
+   -------------------------------------------------------------------------- */
+.shell {
+  width: var(--shell);
+  margin-inline: auto;
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    width: min(100% - 3rem, 68rem);
+    margin-left: max(var(--rail-w), calc((100% - 68rem) / 2));
+    margin-right: auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Encabezado de sección — riel de etiqueta + título
+   -------------------------------------------------------------------------- */
+.section {
+  padding-block: var(--gap-xl) var(--gap-md);
+  scroll-margin-top: 6rem;
+}
+
+.section-head {
+  display: grid;
+  gap: var(--gap-sm);
+  padding-bottom: var(--gap-lg);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: var(--gap-lg);
+}
+
+@media (min-width: 768px) {
+  .section-head {
+    grid-template-columns: 10rem 1fr;
+    align-items: baseline;
+    gap: var(--gap-md);
+  }
+}
+
+.section-index {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--paper-3);
+}
+
+.section-index::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+@media (min-width: 768px) {
+  .section-index::after { display: none; }
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+}
+
+.section-note {
+  grid-column: 1 / -1;
+  font-size: var(--step--1);
+  color: var(--paper-2);
+  max-width: 52ch;
+}
+
+@media (min-width: 768px) {
+  .section-note { grid-column: 2; }
+}
+
+/* --------------------------------------------------------------------------
+   8. Marcas de medición — el vocabulario visual del sitio
+   -------------------------------------------------------------------------- */
+.ticks {
+  --tick: var(--rule);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--tick) 0 1px,
+    transparent 1px 10px
+  );
+  height: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   9. Grano — textura de sensor, casi imperceptible
+   -------------------------------------------------------------------------- */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------------------
+   10. Accesibilidad
    -------------------------------------------------------------------------- */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
+  outline: none;
+  box-shadow: var(--focus-ring);
   border-radius: 4px;
 }
 
-/* Elementos con bordes redondeados usan box-shadow en lugar de outline */
-.social-pill:focus-visible,
-.view-more-btn:focus-visible,
-.theme-toggle:focus-visible {
-  outline: none;
-  box-shadow: var(--shadow-focus);
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--signal);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  border-radius: 6px;
+  transition: top 200ms ease;
+}
+
+.skip-link:focus-visible { top: 1rem; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* --------------------------------------------------------------------------
-   7. Transiciones largas — solo cuando el movimiento está permitido
-      Patrón: cortas siempre activas; largas condicionadas a reduced-motion
+   11. Revelado por scroll — sin JS es visible; el JS solo lo mejora
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
-  .interactive-element {
-    transition: color 150ms ease, transform 300ms cubic-bezier(0.4,0,0.2,1), box-shadow 300ms ease;
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 700ms cubic-bezier(.16,1,.3,1),
+                transform 700ms cubic-bezier(.16,1,.3,1);
+    transition-delay: var(--d, 0ms);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   12. Barra de scroll
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--paper-3); }
+
+/* --------------------------------------------------------------------------
+   14. Lenis
+   -------------------------------------------------------------------------- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }

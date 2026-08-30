@@ -1,79 +1,75 @@
 ---
 const { href, ...rest } = Astro.props;
+const external = !href?.startsWith("mailto:");
 ---
 
 <a
-    class="social-pill"
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    {...rest}
+  class="pill"
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  {...rest}
 >
-    <slot />
+  <span class="pill-body"><slot /></span>
+  <svg class="pill-arrow" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+    <path d="M3 9L9 3M9 3H4M9 3v5" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg>
 </a>
 
 <style>
-    .social-pill {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.6rem 1.25rem;
-        min-height: 44px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--color-text);
-        background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--color-surface) 80%, transparent) 0%,
-            color-mix(in srgb, var(--color-surface) 60%, transparent) 100%
-        );
-        border: 1px solid var(--color-border);
-        border-radius: 50px;
-        text-decoration: none;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.8rem 0.5rem 0.9rem;
+    min-height: 40px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: transparent;
+    transition:
+      color 240ms ease,
+      border-color 240ms ease,
+      background-color 240ms ease,
+      transform 240ms cubic-bezier(.16,1,.3,1);
+  }
 
-    .social-pill::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--color-accent) 15%, transparent) 0%,
-            color-mix(in srgb, var(--color-accent) 5%, transparent) 100%
-        );
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
+  @media (pointer: coarse) {
+    .pill { min-height: 44px; }
+  }
 
-    .social-pill:hover {
-        transform: translateY(-3px);
-        border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
-        box-shadow:
-            0 10px 30px -10px color-mix(in srgb, var(--color-accent) 20%, transparent),
-            0 0 0 1px color-mix(in srgb, var(--color-accent) 10%, transparent);
-    }
+  .pill-body {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-    .social-pill:hover::before {
-        opacity: 1;
-    }
+  .pill :global(.pill-icon) {
+    width: 15px;
+    height: 15px;
+  }
 
-    .social-pill:focus-visible {
-        outline: none;
-        box-shadow: var(--shadow-focus);
-    }
+  .pill-arrow {
+    width: 11px;
+    height: 11px;
+    opacity: 0;
+    transform: translate(-4px, 3px);
+    transition: opacity 240ms ease, transform 240ms cubic-bezier(.16,1,.3,1);
+  }
 
-    .social-pill:active {
-        transform: translateY(-1px);
-    }
+  .pill:hover,
+  .pill:focus-visible {
+    color: var(--signal);
+    border-color: color-mix(in srgb, var(--signal) 45%, transparent);
+    background: color-mix(in srgb, var(--signal) 9%, transparent);
+    transform: translateY(-2px);
+  }
 
-    @media (min-width: 1024px) {
-        .social-pill {
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-        }
-    }
+  .pill:hover .pill-arrow,
+  .pill:focus-visible .pill-arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
 </style>

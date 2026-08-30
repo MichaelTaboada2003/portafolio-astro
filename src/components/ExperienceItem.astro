@@ -1,310 +1,209 @@
 ---
 export interface Props {
-    title: string;
-    company: string;
-    description: string;
-    date: string;
-    link?: string;
+  from: string;
+  to: string;
+  kind: string;
+  title: string;
+  company: string;
+  description: string;
+  link?: string;
+  stack?: string[];
+  index?: number;
 }
 
-const { title, company, description, date, link } = Astro.props;
+const { from, to, kind, title, company, description, link, stack = [], index = 0 } =
+  Astro.props;
+const current = to.toLowerCase() === "presente";
 ---
 
-<li class="experience-item">
-    <div class="timeline-marker">
-        <div class="timeline-dot"></div>
-        <div class="timeline-glow"></div>
-    </div>
+<li class="row" data-reveal style={`--d:${index * 70}ms`}>
+  <span class="row-edge" aria-hidden="true"></span>
 
-    <div class="experience-card">
-        <div class="experience-left">
-            <h3 class="experience-title">{title}</h3>
-            <span class="experience-company">{company}</span>
-            <time class="experience-date">
-                <svg
-                    class="date-icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.75 2.75 0 0118 6.75v8.5A2.75 2.75 0 0115.25 18H4.75A2.75 2.75 0 012 15.25v-8.5A2.75 2.75 0 014.75 4H5V2.75A.75.75 0 015.75 2z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                {date}
-            </time>
-            {
-                link && (
-                    <a
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="experience-link"
-                    >
-                        <span>Saber más</span>
-                        <svg
-                            class="link-arrow"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </a>
-                )
-            }
-        </div>
-        <div class="experience-right">
-            <p class="experience-description">{description}</p>
-        </div>
-    </div>
+  <div class="row-when">
+    <p class="tele row-dates">
+      {from}<span class="row-dash">—</span>{to}
+      {current && <span class="row-live" aria-label="en curso"></span>}
+    </p>
+    <p class={`row-kind row-kind--${kind === "trabajo" ? "work" : "study"}`}>
+      {kind}
+    </p>
+  </div>
+
+  <div class="row-what">
+    <h3 class="row-title">{title}</h3>
+    {
+      link ? (
+        <a href={link} target="_blank" rel="noopener noreferrer" class="row-org">
+          {company}
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <path d="M3 9L9 3M9 3H4M9 3v5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      ) : (
+        <p class="row-org">{company}</p>
+      )
+    }
+    <p class="row-text">{description}</p>
+    {
+      stack.length > 0 && (
+        <ul class="row-stack">
+          {stack.map((s) => (
+            <li class="tele">{s}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
 </li>
 
 <style>
-    .experience-item {
-        position: relative;
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 1.5rem;
-        padding-bottom: 3rem;
-        margin-left: -6px;
-        opacity: 0;
-        animation: fadeInUp 0.6s ease forwards;
-    }
+  .row {
+    position: relative;
+    display: grid;
+    gap: 0.75rem;
+    padding-block: var(--gap-md);
+    border-bottom: 1px solid var(--rule);
+    transition: background-color 300ms ease;
+  }
 
-    .experience-item:nth-child(1) {
-        animation-delay: 0ms;
+  @media (min-width: 768px) {
+    .row {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      gap: var(--gap-md);
     }
-    .experience-item:nth-child(2) {
-        animation-delay: 150ms;
-    }
-    .experience-item:nth-child(3) {
-        animation-delay: 300ms;
-    }
-    .experience-item:nth-child(4) {
-        animation-delay: 450ms;
-    }
+  }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
+  /* Segmento vivo en el borde: sustituye al punto de una línea de tiempo.
+     Marca el tramo que estás leyendo, en la misma lengua que el riel. */
+  .row-edge {
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 2px;
+    height: 0;
+    background: var(--signal);
+    transition: height 420ms cubic-bezier(.16,1,.3,1);
+  }
 
-    .experience-item:last-child {
-        padding-bottom: 0;
-    }
+  @media (min-width: 768px) {
+    .row-edge { left: -1.25rem; }
+  }
 
-    /* Timeline Marker */
-    .timeline-marker {
-        position: relative;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-    }
+  .row:hover .row-edge,
+  .row:focus-within .row-edge {
+    height: calc(100% + 1px);
+  }
 
-    .timeline-dot {
-        width: 14px;
-        height: 14px;
-        background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
-        border-radius: 50%;
-        margin-top: 0.25rem;
-        position: relative;
-        z-index: 10;
-        box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 15%, transparent);
-        transition: all 0.3s ease;
-    }
+  /* --- Columna de tiempo --- */
+  .row-dates {
+    display: flex;
+    align-items: center;
+    color: var(--paper-2);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
 
-    .timeline-glow {
-        position: absolute;
-        top: 0.25rem;
-        width: 14px;
-        height: 14px;
-        background: var(--color-accent);
-        border-radius: 50%;
-        filter: blur(8px);
-        opacity: 0.4;
-        z-index: 5;
-        animation: glowPulse 3s ease-in-out infinite;
-    }
+  .row-dash {
+    margin-inline: 0.35em;
+    opacity: 0.4;
+  }
 
-    @keyframes glowPulse {
-        0%,
-        100% {
-            opacity: 0.3;
-            transform: scale(1);
-        }
-        50% {
-            opacity: 0.6;
-            transform: scale(1.5);
-        }
-    }
+  .row-live {
+    width: 5px;
+    height: 5px;
+    margin-left: 0.5rem;
+    border-radius: 999px;
+    background: var(--reading);
+    flex: none;
+  }
 
-    .experience-item:hover .timeline-dot {
-        transform: scale(1.2);
-        box-shadow:
-            0 0 0 4px color-mix(in srgb, var(--color-accent) 25%, transparent),
-            0 0 20px color-mix(in srgb, var(--color-accent) 40%, transparent);
-    }
+  .row-kind {
+    margin-top: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    width: fit-content;
+  }
 
-    /* Experience Card */
-    .experience-card {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.25rem;
-        padding: 1.5rem;
-        background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--color-surface) 80%, transparent) 0%,
-            color-mix(in srgb, var(--color-surface) 80%, transparent) 100%
-        );
-        border: 1px solid var(--color-border);
-        border-radius: 16px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
+  .row-kind--work {
+    color: var(--signal);
+    background: color-mix(in srgb, var(--signal) 12%, transparent);
+  }
 
-    .experience-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            color-mix(in srgb, var(--color-accent) 30%, transparent),
-            transparent
-        );
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
+  .row-kind--study {
+    color: var(--paper-2);
+    background: color-mix(in srgb, var(--paper-2) 10%, transparent);
+  }
 
-    .experience-card:hover {
-        background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--color-surface) 90%, transparent) 0%,
-            color-mix(in srgb, var(--color-accent) 5%, transparent) 100%
-        );
-        border-color: color-mix(in srgb, var(--color-accent) 25%, var(--color-border));
-        transform: translateX(4px);
-    }
+  /* --- Columna de contenido --- */
+  .row-title {
+    font-size: var(--step-1);
+    font-family: var(--font-body);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--paper);
+    line-height: 1.25;
+  }
 
-    .experience-card:hover::before {
-        opacity: 1;
-    }
+  .row-org {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.2rem;
+    font-size: var(--step--1);
+    color: var(--paper-2);
+    transition: color 200ms ease;
+  }
 
-    @media (min-width: 768px) {
-        .experience-card {
-            grid-template-columns: minmax(200px, 260px) 1fr;
-            gap: 2.5rem;
-            padding: 1.75rem 2rem;
-        }
-    }
+  .row-org svg {
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    transform: translate(-3px, 2px);
+    transition: opacity 220ms ease, transform 220ms cubic-bezier(.16,1,.3,1);
+  }
 
-    /* Left Column */
-    .experience-left {
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-    }
+  /* Área táctil de dedo: el relleno crece y el margen lo compensa,
+     así el diseño no se mueve y el toque llega a ~44px. */
+  @media (pointer: coarse) {
+    a.row-org { padding-block: 0.75rem; margin-block: -0.75rem; }
+  }
 
-    .experience-title {
-        font-size: 1.2rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        line-height: 1.4;
-        margin: 0;
-        letter-spacing: -0.01em;
-    }
+  a.row-org:hover { color: var(--signal); }
+  a.row-org:hover svg { opacity: 1; transform: none; }
 
-    .experience-company {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--color-text);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
+  .row-text {
+    margin-top: 0.7rem;
+    font-size: var(--step--1);
+    color: var(--paper-2);
+    max-width: 62ch;
+  }
 
-    .experience-date {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.85rem;
-        color: var(--color-text-muted);
-        font-weight: 500;
-        margin-top: 0.25rem;
-    }
+  .row-stack {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.9rem 0 0;
+    padding: 0;
+  }
 
-    .date-icon {
-        width: 0.9rem;
-        height: 0.9rem;
-        opacity: 0.7;
-    }
+  .row-stack li {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--paper-3);
+    transition: border-color 260ms ease, color 260ms ease;
+  }
 
-    /* Right Column */
-    .experience-right {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .experience-description {
-        font-size: 0.95rem;
-        line-height: 1.75;
-        color: var(--color-text);
-        margin: 0;
-        max-width: 550px;
-    }
-
-    /* Link */
-    .experience-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        color: var(--color-accent);
-        font-size: 0.875rem;
-        font-weight: 600;
-        text-decoration: none;
-        margin-top: 0.75rem;
-        padding: 0.5rem 0.9rem;
-        background: color-mix(in srgb, var(--color-accent) 10%, transparent);
-        border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
-        border-radius: 8px;
-        width: fit-content;
-        transition: all 0.3s ease;
-    }
-
-    .experience-link:hover {
-        background: color-mix(in srgb, var(--color-accent) 15%, transparent);
-        border-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px color-mix(in srgb, var(--color-accent) 15%, transparent);
-    }
-
-    .link-arrow {
-        width: 0.85rem;
-        height: 0.85rem;
-        transition: transform 0.3s ease;
-    }
-
-    .experience-link:hover .link-arrow {
-        transform: translate(2px, -2px);
-    }
+  .row:hover .row-stack li {
+    border-color: color-mix(in srgb, var(--signal) 26%, var(--rule));
+    color: var(--paper-2);
+  }
 </style>

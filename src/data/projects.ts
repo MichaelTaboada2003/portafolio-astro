@@ -20,134 +20,135 @@ import FastAPIIcon from '../icons/FastAPIIcon.astro';
 export const TAGS = {
     PYTHON: {
         name: 'Python',
-        class: 'bg-[#3776AB]/25 text-[#3776AB]',
         icon: PythonIcon,
+        color: '#3776AB',
     },
     HTML: {
         name: 'HTML',
-        class: 'bg-[#E34F26]/25 text-[#E34F26]',
         icon: HtmlIcon,
+        color: '#E34F26',
     },
     CSS: {
         name: 'CSS',
-        class: 'bg-[#1572B6]/25 text-[#1572B6]',
         icon: CssIcon,
+        color: '#1572B6',
     },
     JAVASCRIPT: {
         name: 'JavaScript',
-        class: 'bg-[#F7DF1E]/25 text-[#F7DF1E]',
         icon: JavaScriptIcon,
+        color: '#F7DF1E',
     },
     TYPESCRIPT: {
         name: 'TypeScript',
-        class: 'bg-[#3178C6]/25 text-[#3178C6]',
         icon: TypeScriptIcon,
+        color: '#3178C6',
     },
     REACT: {
         name: 'React',
-        class: 'bg-[#61DAFB]/25 text-[#61DAFB]',
         icon: ReactIcon,
+        color: '#61DAFB',
     },
     REACT_NATIVE: {
         name: 'React Native',
-        class: 'bg-[#61DAFB]/25 text-[#61DAFB]',
         icon: ReactIcon,
+        color: '#61DAFB',
     },
     VUE: {
         name: 'Vue.js',
-        class: 'bg-[#4FC08D]/25 text-[#4FC08D]',
         icon: VueIcon,
+        color: '#4FC08D',
     },
     NEXTJS: {
         name: 'Next.js',
-        class: 'bg-[#111]/15 text-[#111] dark:bg-white/15 dark:text-white',
         icon: NextjsIcon,
+        color: 'currentColor',
     },
     ASTRO: {
         name: 'Astro',
-        class: 'bg-[#FF5D01]/25 text-[#FF5D01]',
         icon: AstroIcon,
+        color: '#FF5D01',
     },
     NODEJS: {
         name: 'Node.js',
-        class: 'bg-[#339933]/25 text-[#339933]',
         icon: NodejsIcon,
+        color: '#339933',
     },
     TAILWIND: {
         name: 'Tailwind CSS',
-        class: 'bg-[#06B6D4]/25 text-[#06B6D4]',
         icon: TailwindIcon,
+        color: '#06B6D4',
     },
     SUPABASE: {
         name: 'Supabase',
-        class: 'bg-[#3ECF8E]/25 text-[#3ECF8E]',
         icon: SupabaseIcon,
+        color: '#3ECF8E',
     },
     GROQ: {
         name: 'Groq',
-        class: 'bg-[#F54F35]/25 text-[#F54F35]',
         icon: GroqIcon,
+        color: '#F54F35',
     },
     MYSQL: {
         name: 'MySQL',
-        class: 'bg-[#4479A1]/25 text-[#4479A1]',
         icon: null,
+        color: '#4479A1',
     },
     POSTGRESQL: {
         name: 'PostgreSQL',
-        class: 'bg-[#4169E1]/25 text-[#4169E1]',
         icon: null,
+        color: '#4169E1',
     },
     DOCKER: {
         name: 'Docker',
-        class: 'bg-[#2496ED]/25 text-[#2496ED]',
         icon: null,
+        color: '#2496ED',
     },
     TERRAFORM: {
         name: 'Terraform',
-        class: 'bg-[#7B42BC]/25 text-[#7B42BC]',
         icon: null,
+        color: '#7B42BC',
     },
     AWS: {
         name: 'AWS',
-        class: 'bg-[#FF9900]/25 text-[#FF9900]',
         icon: null,
+        color: '#FF9900',
     },
     THREEJS: {
         name: 'Three.js',
-        class: 'bg-[#111]/15 text-[#111] dark:bg-white/15 dark:text-white',
         icon: ThreejsIcon,
+        color: 'currentColor',
     },
     EXPO: {
         name: 'Expo',
-        class: 'bg-[#111]/10 text-[#111] dark:bg-[#1a1a2e]/60 dark:text-[#c4c4c4]',
         icon: ExpoIcon,
+        color: 'currentColor',
     },
     FASTAPI: {
         name: 'FastAPI',
-        class: 'bg-[#009688]/25 text-[#009688]',
         icon: FastAPIIcon,
+        color: '#009688',
     },
     OPENCV: {
         name: 'OpenCV',
-        class: 'bg-[#5C3EE8]/25 text-[#5C3EE8]',
         icon: null,
+        color: '#5C3EE8',
     },
     SCIKIT: {
         name: 'scikit-learn',
-        class: 'bg-[#F7931E]/25 text-[#F7931E]',
         icon: null,
+        color: '#F7931E',
     },
     FLASK: {
         name: 'Flask',
-        class: 'bg-[#111]/15 text-[#111] dark:bg-white/15 dark:text-white',
         icon: FlaskIcon,
+        color: 'currentColor',
     },
 }
 
 export interface Project {
     title: string;
     slug: string;
+    context: string;
     description: string;
     longDescription?: string;
     image: string;
@@ -162,6 +163,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'Networking App',
         slug: 'networking',
+        context: 'Producto',
         description: 'Aplicación web para gestión de contactos profesionales y networking. Incluye autenticación de usuarios, gestión de perfiles, dashboard personalizado y exportación de datos. Con +55 usuarios.',
         longDescription: `Networking App es una plataforma web completa diseñada para profesionales que buscan optimizar sus conexiones comerciales.
 
@@ -184,6 +186,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'EmotiSpeech — Clasificador de Emociones de Voz',
         slug: 'emotispeech',
+        context: 'Investigación',
         description: 'Aplicación web de IA emocional y toma de decisiones para atención al cliente. Clasifica emociones en audio de voz con alta precisión y traduce los resultados en métricas financieras mediante simulaciones Monte Carlo para justificar el despliegue del modelo en entornos de negocio.',
         longDescription: `EmotiSpeech es un proyecto integrado de Machine Learning y Toma de Decisiones para clasificación de emociones en audio de voz.
 
@@ -211,6 +214,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'A World Away - NASA 2025',
         slug: 'a-world-away',
+        context: 'Hackathon',
         description: 'Proyecto desarrollado para el NASA Space Apps Challenge 2025. Exploración de mundos lejanos y visualización de datos astronómicos con IA.',
         longDescription: `A World Away es un proyecto innovador desarrollado para el NASA Space Apps Challenge 2025, enfocado en la exploración y visualización de exoplanetas.
 
@@ -235,6 +239,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'Shainy',
         slug: 'shainy',
+        context: 'Cliente',
         description: 'Plataforma e-commerce de gestión de ventas con sincronización de inventario en tiempo real y checkout dinámico vía WhatsApp.',
         longDescription: `Shainy es una plataforma e-commerce completa diseñada para pequeños y medianos comercios que buscan digitalizar sus ventas.
 
@@ -257,6 +262,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'Gym Tracker',
         slug: 'gym-tracker',
+        context: 'Personal',
         description: 'Aplicación móvil para seguimiento de entrenamientos en el gimnasio. Permite registrar ejercicios, series, repeticiones y peso. Incluye estadísticas de progreso y visualización de datos.',
         longDescription: `Gym Tracker es una aplicación móvil desarrollada con React Native y Expo, diseñada para ayudar a los usuarios a llevar un registro detallado de sus entrenamientos.
 
@@ -279,6 +285,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'Exosky - NASA Space Apps 2024',
         slug: 'exosky',
+        context: 'Hackathon',
         description: 'Visualizador interactivo del cielo nocturno desde la superficie de exoplanetas. Desarrollado para NASA Space Apps 2024.',
         longDescription: `Exosky es un visualizador astronómico interactivo que permite explorar cómo se vería el cielo nocturno desde la superficie de diferentes exoplanetas.
 
@@ -301,6 +308,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'Novenas 2025',
         slug: 'novenas',
+        context: 'Personal',
         description: 'Aplicación web para el seguimiento de asistencias de las Novenas navideñas con inteligencia artificial.',
         longDescription: `Novenas 2025 es una aplicación web moderna para gestionar y hacer seguimiento de las tradicionales Novenas navideñas.
 
@@ -316,6 +324,7 @@ export const ALL_PROJECTS: Project[] = [
     {
         title: 'Sensado y Modelado de Sistemas Físicos',
         slug: 'sensado-sistemas-fisicos',
+        context: 'Académico',
         description: 'Hub académico con 5 laboratorios interactivos: estimación de gravedad, visión computacional, coeficiente de restitución, análisis de péndulo con FFT y clasificación de cobertura terrestre con Sentinel-2.',
         longDescription: `Repositorio que centraliza 5 experimentos de la asignatura Sensado y Modelado de Sistemas Físicos, cada uno con arquitectura cliente-servidor (FastAPI + React).
 

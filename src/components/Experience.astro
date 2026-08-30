@@ -1,84 +1,70 @@
 ---
-const EXPERIENCE = [
-    {
-        date: "Agosto 2025 - Diciembre 2025",
-        title: "Intern PSO",
-        company: "Labvantage Latam",
-        description:
-            "Prácticas profesionales en el área de Professional Services Organization. Implementación y configuración de soluciones LIMS (Laboratory Information Management System) para clientes de la región.",
-        link: "https://www.labvantage.com",
-    },
-    {
-        date: "2024 - Presente",
-        title: "Desarrollador Full Stack",
-        company: "Zenoex",
-        description:
-            "Desarrollo de aplicaciones web utilizando tecnologías modernas como React, Next.js, Astro y Node.js. Creación de interfaces de usuario dinámicas y responsivas.",
-        link: "https://zenoex.co",
-    },
-    {
-        date: "2024 - Presente",
-        title: "Estudiante de Ciencias de Datos",
-        company: "Universidad Tecnológica de Bolívar",
-        description:
-            "Doble titulación en Ciencias de Datos. Análisis de datos y machine learning aplicado a problemas reales. Uso de Python, Pandas, NumPy y scikit-learn para procesamiento y modelado de datos.",
-        link: "https://www.utb.edu.co",
-    },
-    {
-        date: "2021 - Diciembre 2025",
-        title: "Estudiante de Ingeniería de Sistemas",
-        company: "Universidad Tecnológica de Bolívar",
-        description:
-            "Ingeniería de Sistemas y Computación. Desarrollo de proyectos académicos y personales enfocados en desarrollo web, bases de datos y arquitectura de software.",
-        link: "https://www.utb.edu.co",
-    },
-];
 import ExperienceItem from "./ExperienceItem.astro";
+
+/*
+  El tipo (trabajo / formación) es información que el lector necesita para leer
+  dos trayectorias que corren en paralelo, no un adorno.
+*/
+const EXPERIENCE = [
+  {
+    from: "2024",
+    to: "Presente",
+    kind: "trabajo",
+    title: "Desarrollador Full Stack",
+    company: "Zenoex",
+    link: "https://zenoex.co",
+    description:
+      "Desarrollo de aplicaciones web de punta a punta con React, Next.js, Astro y Node.js. Interfaces responsivas y servicios que las sostienen.",
+    stack: ["React", "Next.js", "Astro", "Node.js"],
+  },
+  {
+    from: "Ago 2025",
+    to: "Dic 2025",
+    kind: "trabajo",
+    title: "Intern, Professional Services",
+    company: "Labvantage Latam",
+    link: "https://www.labvantage.com",
+    description:
+      "Implementación y configuración de LIMS (Laboratory Information Management System) para clientes de la región.",
+    stack: ["LIMS", "SQL", "Java"],
+  },
+  {
+    from: "2024",
+    to: "Presente",
+    kind: "formación",
+    title: "Doble titulación en Ciencias de Datos",
+    company: "Universidad Tecnológica de Bolívar",
+    link: "https://www.utb.edu.co",
+    description:
+      "Análisis de datos y machine learning aplicado a problemas reales, con Python, Pandas, NumPy y scikit-learn.",
+    stack: ["Python", "Pandas", "scikit-learn"],
+  },
+  {
+    from: "2021",
+    to: "Dic 2025",
+    kind: "formación",
+    title: "Ingeniería de Sistemas y Computación",
+    company: "Universidad Tecnológica de Bolívar",
+    link: "https://www.utb.edu.co",
+    description:
+      "Título profesional. Proyectos académicos y personales en desarrollo web, bases de datos y arquitectura de software.",
+    stack: ["Arquitectura", "Bases de datos", "Web"],
+  },
+];
 ---
 
-<div class="experience-wrapper">
-    <ol class="experience-timeline">
-        {EXPERIENCE.map((experience) => <ExperienceItem {...experience} />)}
-    </ol>
-</div>
+<ol class="log">
+  {
+    EXPERIENCE.map((item, i) => (
+      <ExperienceItem {...item} index={i} />
+    ))
+  }
+</ol>
 
 <style>
-    .experience-wrapper {
-        position: relative;
-        padding-left: 0.5rem;
-    }
-
-    .experience-timeline {
-        position: relative;
-        margin-left: 0.5rem;
-        padding-left: 0;
-        list-style: none;
-    }
-
-    /* Timeline Line with Gradient */
-    .experience-timeline::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0.5rem;
-        bottom: 2rem;
-        width: 2px;
-        background: linear-gradient(
-            180deg,
-            rgba(251, 191, 36, 0.5) 0%,
-            rgba(251, 191, 36, 0.2) 50%,
-            rgba(75, 85, 99, 0.2) 100%
-        );
-        border-radius: 2px;
-    }
-
-    /* Tema claro: línea morada */
-    :global(.light) .experience-timeline::before {
-        background: linear-gradient(
-            180deg,
-            rgba(168, 85, 247, 0.5) 0%,
-            rgba(168, 85, 247, 0.2) 50%,
-            rgba(75, 85, 99, 0.2) 100%
-        );
-    }
+  .log {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 </style>

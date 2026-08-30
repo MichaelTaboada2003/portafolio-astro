@@ -1,91 +1,78 @@
 ---
-// ThemeToggle.astro — Sin props, componente autónomo de alternancia de tema
+// Alterna el tema. El icono es un disco que gira: sol de un lado, luna del otro.
 ---
 
 <button
   id="theme-toggle"
-  class="theme-toggle"
+  class="toggle"
+  type="button"
   role="switch"
   aria-checked="true"
   aria-label="Cambiar a tema claro"
-  title="Cambiar tema"
+  data-theme="dark"
 >
-  <!-- Icono sol: visible cuando el tema oscuro está activo (clic para cambiar a claro) -->
-  <svg
-    id="sun-icon"
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="12" r="5"></circle>
-    <line x1="12" y1="1" x2="12" y2="3"></line>
-    <line x1="12" y1="21" x2="12" y2="23"></line>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-    <line x1="1" y1="12" x2="3" y2="12"></line>
-    <line x1="21" y1="12" x2="23" y2="12"></line>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-  </svg>
-
-  <!-- Icono luna: visible cuando el tema claro está activo (clic para cambiar a oscuro) -->
-  <svg
-    id="moon-icon"
-    xmlns="http://www.w3.org/2000/svg"
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-    style="display: none;"
-  >
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-  </svg>
+  <span class="toggle-disc">
+    <svg class="toggle-face toggle-face--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.2"></circle>
+      <path d="M12 2.6v2.2M12 19.2v2.2M4.2 12H2M22 12h-2.2M5.9 5.9l1.6 1.6M16.5 16.5l1.6 1.6M18.1 5.9l-1.6 1.6M7.5 16.5l-1.6 1.6"></path>
+    </svg>
+    <svg class="toggle-face toggle-face--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M20.5 13.2A8.4 8.4 0 1 1 10.8 3.5a6.6 6.6 0 0 0 9.7 9.7Z"></path>
+    </svg>
+  </span>
 </button>
 
 <style>
-  .theme-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 0.5rem;
-    background: color-mix(in srgb, var(--color-surface) 85%, transparent);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    color: var(--color-text);
+  .toggle {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--paper-2);
     cursor: pointer;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: var(--shadow-card);
-    transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease,
+      background-color 200ms ease;
   }
 
-  .theme-toggle:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
-    background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  @media (pointer: coarse) {
+    .toggle { width: 44px; height: 44px; }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .theme-toggle {
-      transition: color 150ms ease, background-color 150ms ease, transform 200ms ease;
-    }
+  .toggle:hover {
+    color: var(--signal);
+    border-color: color-mix(in srgb, var(--signal) 40%, transparent);
+    background: color-mix(in srgb, var(--signal) 10%, transparent);
+  }
 
-    .theme-toggle:hover {
-      transform: scale(1.1);
-    }
+  /* El disco rota 180°: una cara entra mientras la otra sale */
+  .toggle-disc {
+    position: relative;
+    display: block;
+    width: 17px;
+    height: 17px;
+    transform-style: preserve-3d;
+    transition: transform 520ms cubic-bezier(.65,0,.35,1);
+  }
+
+  .toggle[data-theme="light"] .toggle-disc {
+    transform: rotateY(180deg);
+  }
+
+  .toggle-face {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+  }
+
+  .toggle-face--moon {
+    transform: rotateY(180deg);
   }
 </style>

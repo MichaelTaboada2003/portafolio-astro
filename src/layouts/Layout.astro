@@ -1,21 +1,36 @@
 ---
 import "@fontsource-variable/onest";
+import "@fontsource/instrument-serif/400.css";
+import "@fontsource/instrument-serif/400-italic.css";
+import "@fontsource-variable/jetbrains-mono";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Animations from "../components/Animations.astro";
+import InstrumentRail from "../components/InstrumentRail.astro";
 import { ViewTransitions } from "astro:transitions";
 import "../styles/global.css";
 
 interface Props {
 	title: string;
+	description?: string;
+	image?: string;
 }
 
-const { title } = Astro.props;
+const {
+	title,
+	description = "Michael Taboada — Ingeniero de Sistemas y estudiante de Ciencias de Datos en Cartagena, Colombia. Construyo producto web e integro modelos de machine learning en él.",
+	image = "/yo.jpeg",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://michaeltaboada.dev");
 ---
 
 <!doctype html>
 <html lang="es">
 	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
 		<script is:inline>
 			(function () {
 				function applyTheme() {
@@ -32,25 +47,18 @@ const { title } = Astro.props;
 					root.classList.add(theme);
 				}
 
-				// Sincroniza el icono y los aria-* del botón con el tema actual
 				function syncToggleUI() {
 					var isDark = document.documentElement.classList.contains('dark');
-					var sun = document.getElementById('sun-icon');
-					var moon = document.getElementById('moon-icon');
 					var btn = document.getElementById('theme-toggle');
-					if (sun) sun.style.display = isDark ? 'block' : 'none';
-					if (moon) moon.style.display = isDark ? 'none' : 'block';
 					if (btn) {
 						btn.setAttribute('aria-checked', String(isDark));
 						btn.setAttribute('aria-label', isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+						btn.dataset.theme = isDark ? 'dark' : 'light';
 					}
 				}
 
-				// Aplica el tema antes del primer paint (evita parpadeo)
 				applyTheme();
 
-				// Event delegation: un único listener en document que sobrevive a las
-				// navegaciones de ViewTransitions y funciona en TODAS las páginas
 				document.addEventListener('click', function (e) {
 					var btn = e.target && e.target.closest && e.target.closest('#theme-toggle');
 					if (!btn) return;
@@ -62,62 +70,43 @@ const { title } = Astro.props;
 					syncToggleUI();
 				});
 
-				// Reaplicar tema antes de pintar el DOM nuevo en cada navegación SPA
 				document.addEventListener('astro:after-swap', function () {
 					applyTheme();
 					syncToggleUI();
 				});
 
-				// Sincronizar el icono cuando la página termina de cargar
 				document.addEventListener('astro:page-load', syncToggleUI);
 			})();
 		</script>
-		<meta name="viewport" content="width=device-width" />
-		<meta name="description" content="Portafolio creado con Astro" />
-		<meta charset="UTF-8" />
+
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+		<meta name="theme-color" content="#06070c" media="(prefers-color-scheme: dark)" />
+		<meta name="theme-color" content="#eceef3" media="(prefers-color-scheme: light)" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(image, canonical)} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:locale" content="es_CO" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={new URL(image, canonical)} />
+
 		<ViewTransitions />
 	</head>
 	<body>
+		<a href="#contenido" class="skip-link">Saltar al contenido</a>
+		<div class="grain"></div>
+		<InstrumentRail />
 		<Header />
 		<slot />
 		<Footer />
 		<Animations />
 	</body>
 </html>
-<style is:global>
-	html {
-		font-family: "Onest Variable", system-ui, sans-serif;
-		scroll-behavior: smooth;
-	}
-	html.lenis,
-	html.lenis body {
-		height: auto;
-	}
-	.lenis.lenis-smooth {
-		scroll-behavior: auto !important;
-	}
-	.lenis.lenis-smooth [data-lenis-prevent] {
-		overscroll-behavior: contain;
-	}
-	.lenis.lenis-stopped {
-		overflow: hidden;
-	}
-	.lenis.lenis-smooth iframe {
-		pointer-events: none;
-	}
-	body {
-		display: flex;
-		min-height: 100vh;
-		flex-direction: column;
-		background-color: var(--color-bg);
-		color: var(--color-text);
-	}
-	@media (prefers-reduced-motion: reduce) {
-		html {
-			scroll-behavior: auto;
-		}
-	}
-</style>

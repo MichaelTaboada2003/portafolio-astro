@@ -1,0 +1,159 @@
+---
+/*
+  Readout — cuatro cifras verificables tomadas de los proyectos.
+  Es el único sitio, junto a la tesis, donde aparece el cian: son valores medidos.
+*/
+const READINGS = [
+  {
+    value: "0.86",
+    unit: "bal. acc.",
+    label: "Clasificación de emoción en voz, 4 clases, validación leave-one-audio-out",
+    to: 0.86,
+    decimals: 2,
+  },
+  {
+    value: "55",
+    unit: "usuarios",
+    label: "Cuentas activas en Networking App, en producción",
+    to: 55,
+    decimals: 0,
+    suffix: "+",
+  },
+  {
+    value: "2",
+    unit: "ediciones",
+    label: "NASA Space Apps Challenge, 2024 y 2025",
+    to: 2,
+    decimals: 0,
+  },
+  {
+    value: "2000",
+    unit: "escenarios",
+    label: "Simulación Monte Carlo para decidir el despliegue del modelo",
+    to: 2000,
+    decimals: 0,
+  },
+];
+---
+
+<section class="readout" aria-label="Cifras del trabajo">
+  <div class="shell">
+    <ul class="readout-grid">
+      {
+        READINGS.map((r, i) => (
+          <li class="reading" data-reveal style={`--d:${i * 90}ms`}>
+            <p class="reading-value value">
+              <span
+                class="reading-num"
+                data-count={r.to}
+                data-decimals={r.decimals}
+              >
+                {r.value}
+              </span>
+              {r.suffix && <span class="reading-suffix">{r.suffix}</span>}
+            </p>
+            <p class="tele reading-unit">{r.unit}</p>
+            <p class="reading-label">{r.label}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<script>
+  // Cuenta ascendente al entrar en pantalla. Sin movimiento si no se desea.
+  function initCounters() {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const nums = document.querySelectorAll<HTMLElement>("[data-count]");
+    if (!nums.length || reduce) return;
+
+    const fmt = (n: number, d: number) =>
+      d > 0 ? n.toFixed(d) : Math.round(n).toLocaleString("es-CO");
+
+    const run = (el: HTMLElement) => {
+      const to = Number(el.dataset.count ?? 0);
+      const d = Number(el.dataset.decimals ?? 0);
+      const dur = 1100;
+      const t0 = performance.now();
+      const step = (t: number) => {
+        const p = Math.min(1, (t - t0) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = fmt(to * eased, d);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          run(e.target as HTMLElement);
+          io.unobserve(e.target);
+        });
+      },
+      { threshold: 0.6 },
+    );
+
+    nums.forEach((n) => io.observe(n));
+  }
+
+  document.addEventListener("astro:page-load", initCounters);
+</script>
+
+<style>
+  .readout {
+    padding-block: var(--gap-lg);
+    border-block: 1px solid var(--rule);
+  }
+
+  .readout-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--gap-md);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 860px) {
+    .readout-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+    }
+    .reading {
+      padding-inline: clamp(1rem, 2vw, 1.75rem);
+      border-left: 1px solid var(--rule);
+    }
+    .reading:first-child { padding-left: 0; border-left: 0; }
+  }
+
+  .reading-value {
+    display: flex;
+    align-items: baseline;
+    font-size: var(--step-4);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .reading-suffix {
+    font-size: 0.55em;
+    opacity: 0.65;
+    margin-left: 0.05em;
+  }
+
+  .reading-unit {
+    margin-top: 0.45rem;
+    letter-spacing: 0.16em;
+  }
+
+  .reading-label {
+    margin-top: 0.65rem;
+    font-size: var(--step--2);
+    line-height: 1.5;
+    color: var(--paper-2);
+    max-width: 24ch;
+  }
+</style>

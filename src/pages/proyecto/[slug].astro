@@ -1,306 +1,386 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import SectionContainer from "../../components/SectionContainer.astro";
-import { getAllProjects } from "../../data/projects";
+import TagChip from "../../components/TagChip.astro";
 import GithubIcon from "../../icons/GithubIcon.astro";
+import { getAllProjects } from "../../data/projects";
 
 export async function getStaticPaths() {
-    const projects = getAllProjects();
-    return projects.map((project) => ({
-        params: { slug: project.slug },
-        props: { project },
-    }));
+  const projects = getAllProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: {
+      project,
+      index: i,
+      prev: projects[(i - 1 + projects.length) % projects.length],
+      next: projects[(i + 1) % projects.length],
+    },
+  }));
 }
 
-const { project } = Astro.props;
+const { project, index, prev, next } = Astro.props;
+
+const escape = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+const inline = (s: string) =>
+  escape(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+/*
+  El texto largo se escribe en un Markdown mínimo (negritas, viñetas y
+  encabezados de una línea). Se renderiza aquí en vez de encadenar reemplazos,
+  para que las listas queden como listas y no como saltos de línea.
+*/
+function render(md: string): string {
+  const out: string[] = [];
+  let list: string[] = [];
+
+  const flush = () => {
+    if (!list.length) return;
+    out.push(`<ul>${list.map((li) => `<li>${inline(li)}</li>`).join("")}</ul>`);
+    list = [];
+  };
+
+  for (const raw of md.split("\n")) {
+    const line = raw.trim();
+    if (!line) {
+      flush();
+      continue;
+    }
+    if (line.startsWith("- ")) {
+      list.push(line.slice(2));
+      continue;
+    }
+    flush();
+    const heading = line.match(/^\*\*(.+?):?\*\*:?$/);
+    if (heading) {
+      out.push(`<h3>${escape(heading[1])}</h3>`);
+    } else {
+      out.push(`<p>${inline(line)}</p>`);
+    }
+  }
+  flush();
+  return out.join("");
+}
+
+const body = project.longDescription ? render(project.longDescription) : "";
 ---
 
-<Layout title={`${project.title} - Michael Taboada`}>
-    <main class="px-4 py-14 md:py-24">
-        <SectionContainer>
-            <!-- Back Link -->
-            <a href="/proyectos" class="back-link">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    class="back-icon"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z"
-                        clip-rule="evenodd"></path>
-                </svg>
-                <span>Volver a proyectos</span>
-            </a>
+<Layout
+  title={`${project.title} — Michael Taboada`}
+  description={project.description}
+  image={project.image}
+>
+  <main id="contenido" class="case-page">
+    <div class="shell">
+      <a href="/proyectos" class="back">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M12 7H2M6 3L2 7l4 4" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="tele">Proyectos</span>
+      </a>
 
-            <!-- Project Header -->
-            <div class="project-header">
-                <h1 class="project-title">{project.title}</h1>
+      <header class="head">
+        <p class="head-meta">
+          <span class="tele head-num">{String(index + 1).padStart(2, "0")}</span>
+          <span class="head-rule" aria-hidden="true"></span>
+          <span class="tele">{project.context}</span>
+        </p>
 
-                <!-- Tags -->
-                <ul class="project-tags">
-                    {
-                        project.tags.map((tag: any) => (
-                            <li>
-                                <span class={`project-tag ${tag.class}`}>
-                                    {tag.icon && <tag.icon class="tag-icon" />}
-                                    {tag.name}
-                                </span>
-                            </li>
-                        ))
-                    }
-                </ul>
+        <h1 class="head-title display">{project.title}</h1>
+        <p class="lede head-lede">{project.description}</p>
+      </header>
+
+      <figure class="shot">
+        <img
+          src={project.image}
+          alt={`Captura de ${project.title}`}
+          width="1280"
+          height="800"
+          loading="eager"
+        />
+        <span class="bracket bracket--tl" aria-hidden="true"></span>
+        <span class="bracket bracket--tr" aria-hidden="true"></span>
+        <span class="bracket bracket--bl" aria-hidden="true"></span>
+        <span class="bracket bracket--br" aria-hidden="true"></span>
+      </figure>
+
+      <div class="layout">
+        <aside class="ficha">
+          <div class="ficha-block">
+            <h2 class="tele ficha-label">Stack</h2>
+            <ul class="ficha-tags">
+              {project.tags.map((t) => (
+                <li><TagChip tag={t} size="sm" /></li>
+              ))}
+            </ul>
+          </div>
+
+          {(project.github || project.preview) && (
+            <div class="ficha-block">
+              <h2 class="tele ficha-label">Enlaces</h2>
+              <ul class="ficha-links">
+                {project.preview && (
+                  <li>
+                    <a href={project.preview} target="_blank" rel="noopener noreferrer">
+                      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                        <path d="M3.5 10.5L10.5 3.5M10.5 3.5H5.5M10.5 3.5v5" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      Ver en vivo
+                    </a>
+                  </li>
+                )}
+                {project.github && (
+                  <li>
+                    <a href={project.github} target="_blank" rel="noopener noreferrer">
+                      <GithubIcon class="ficha-icon" />
+                      Código fuente
+                    </a>
+                  </li>
+                )}
+              </ul>
             </div>
+          )}
+        </aside>
 
-            <!-- Project Image -->
-            <div class="project-image-wrapper">
-                <img
-                    src={project.image}
-                    alt={`Captura de pantalla de ${project.title}`}
-                    class="project-image"
-                    loading="eager"
-                />
-            </div>
+        <div class="prose" set:html={body} />
+      </div>
 
-            <!-- Project Content -->
-            <div class="project-content">
-                <!-- Description -->
-                <div class="project-description">
-                    <h2>Descripción</h2>
-                    <p>{project.description}</p>
-                </div>
-
-                <!-- Long Description -->
-                {
-                    project.longDescription && (
-                        <div class="project-long-description">
-                            <h2>Detalles del proyecto</h2>
-                            <div
-                                class="markdown-content"
-                                set:html={project.longDescription
-                                    .replace(
-                                        /\*\*(.*?)\*\*/g,
-                                        "<strong>$1</strong>",
-                                    )
-                                    .replace(/\n/g, "<br/>")
-                                    .replace(/- /g, "• ")}
-                            />
-                        </div>
-                    )
-                }
-
-                <!-- Links -->
-                <div class="project-links">
-                    {
-                        project.github && (
-                            <a
-                                href={project.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="project-link"
-                            >
-                                <GithubIcon class="link-icon" />
-                                <span>Ver código en GitHub</span>
-                            </a>
-                        )
-                    }
-                    {
-                        project.preview && (
-                            <a
-                                href={project.preview}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="project-link project-link-preview"
-                            >
-                                <svg
-                                    class="link-icon"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                >
-                                    <path d="M12.232 4.232a2.5 2.5 0 013.536 3.536l-1.225 1.224a.75.75 0 001.061 1.06l1.224-1.224a4 4 0 00-5.656-5.656l-3 3a4 4 0 00.225 5.865.75.75 0 00.977-1.138 2.5 2.5 0 01-.142-3.667l3-3z" />
-                                    <path d="M11.603 7.963a.75.75 0 00-.977 1.138 2.5 2.5 0 01.142 3.667l-3 3a2.5 2.5 0 01-3.536-3.536l1.225-1.224a.75.75 0 00-1.061-1.06l-1.224 1.224a4 4 0 105.656 5.656l3-3a4 4 0 00-.225-5.865z" />
-                                </svg>
-                                <span>Ver demo en vivo</span>
-                            </a>
-                        )
-                    }
-                </div>
-            </div>
-        </SectionContainer>
-    </main>
+      <nav class="pager" aria-label="Otros proyectos">
+        <a class="pager-item pager-item--prev" href={`/proyecto/${prev.slug}`}>
+          <span class="tele">Anterior</span>
+          <span class="pager-title">{prev.title}</span>
+        </a>
+        <a class="pager-item pager-item--next" href={`/proyecto/${next.slug}`}>
+          <span class="tele">Siguiente</span>
+          <span class="pager-title">{next.title}</span>
+        </a>
+      </nav>
+    </div>
+  </main>
 </Layout>
 
 <style>
-    /* Back Link */
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--color-text-muted);
-        text-decoration: none;
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-bottom: 2rem;
-        transition: all 0.2s ease;
-    }
+  .case-page {
+    padding-top: clamp(6rem, 4rem + 8vw, 9rem);
+    padding-bottom: var(--gap-xl);
+  }
 
-    .back-link:hover {
-        color: var(--color-accent);
-    }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--paper-3);
+    transition: color 220ms ease;
+  }
 
-    .back-icon {
-        width: 1.1rem;
-        height: 1.1rem;
-        transition: transform 0.2s ease;
-    }
+  /* Área táctil de dedo: el relleno crece y el margen lo compensa,
+     así el diseño no se mueve y el toque llega a ~44px. */
+  @media (pointer: coarse) {
+    .back, .ficha-links a { padding-block: 0.85rem; margin-block: -0.85rem; }
+  }
 
-    .back-link:hover .back-icon {
-        transform: translateX(-4px);
-    }
+  .back:hover { color: var(--signal); }
+  .back svg { width: 13px; height: 13px; transition: transform 300ms cubic-bezier(.16,1,.3,1); }
+  .back:hover svg { transform: translateX(-3px); }
+  .back .tele { color: inherit; }
 
-    /* Project Header */
-    .project-header {
-        margin-bottom: 2rem;
-    }
+  /* --- Encabezado --- */
+  .head { padding-block: var(--gap-lg) var(--gap-md); }
 
-    .project-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: var(--color-text);
-        margin: 0 0 1.5rem 0;
-        background: linear-gradient(135deg, var(--color-text) 0%, var(--color-accent-light) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
+  .head-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
 
-    @media (min-width: 768px) {
-        .project-title {
-            font-size: 3rem;
-        }
-    }
+  .head-num { color: var(--signal); }
+  .head-rule { width: 28px; height: 1px; background: var(--rule); }
 
-    /* Tags */
-    .project-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+  .head-title {
+    font-size: var(--step-5);
+    color: var(--paper);
+    max-width: 20ch;
+  }
 
-    .project-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border-radius: 50px;
-    }
+  .head-lede { margin-top: var(--gap-md); max-width: 52ch; }
 
-    .tag-icon {
-        width: 1rem;
-        height: 1rem;
-    }
+  /* --- Captura --- */
+  .shot {
+    position: relative;
+    margin: var(--gap-lg) 0 0;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--ink-3);
+  }
 
-    /* Project Image */
-    .project-image-wrapper {
-        margin-bottom: 3rem;
-        border-radius: 16px;
-        overflow: hidden;
-        aspect-ratio: 16 / 10;
-        box-shadow:
-            var(--shadow-card),
-            var(--shadow-accent-glow);
-    }
+  .shot img {
+    width: 100%;
+    height: auto;
+    max-height: 74vh;
+    object-fit: cover;
+    object-position: top center;
+  }
 
-    .project-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        background: rgba(0, 0, 0, 0.2);
-    }
+  .bracket {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--signal);
+    pointer-events: none;
+  }
 
-    /* Project Content */
-    .project-content {
-        display: flex;
-        flex-direction: column;
-        gap: 2.5rem;
-    }
+  .bracket--tl { top: 12px; left: 12px;  border-right: 0; border-bottom: 0; }
+  .bracket--tr { top: 12px; right: 12px; border-left: 0;  border-bottom: 0; }
+  .bracket--bl { bottom: 12px; left: 12px;  border-right: 0; border-top: 0; }
+  .bracket--br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
 
-    .project-description h2,
-    .project-long-description h2 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--color-accent);
-        margin: 0 0 1rem 0;
-    }
+  /* --- Cuerpo --- */
+  .layout {
+    display: grid;
+    gap: var(--gap-lg);
+    margin-top: var(--gap-xl);
+  }
 
-    .project-description p {
-        font-size: 1.1rem;
-        line-height: 1.8;
-        color: var(--color-text);
-        margin: 0;
+  @media (min-width: 880px) {
+    .layout {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: clamp(2rem, 1rem + 4vw, 4rem);
+      align-items: start;
     }
+    .ficha { position: sticky; top: 6.5rem; }
+  }
 
-    .project-long-description .markdown-content {
-        font-size: 1rem;
-        line-height: 1.8;
-        color: var(--color-text);
-    }
+  .ficha-block + .ficha-block { margin-top: var(--gap-md); }
 
-    .project-long-description .markdown-content :global(strong) {
-        color: var(--color-text);
-        font-weight: 600;
-    }
+  .ficha-label {
+    padding-bottom: 0.55rem;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid var(--rule);
+    color: var(--signal);
+  }
 
-    /* Links */
-    .project-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
+  .ficha-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+  }
 
-    .project-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        padding: 0.85rem 1.5rem;
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--color-text);
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid var(--color-border);
-        border-radius: 12px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
+  .ficha-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
 
-    .project-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.25);
-        transform: translateY(-2px);
-    }
+  .ficha-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--paper-2);
+    transition: color 220ms ease;
+  }
 
-    .project-link-preview {
-        background: rgba(251, 191, 36, 0.1);
-        border-color: rgba(251, 191, 36, 0.3);
-        color: var(--color-accent);
-    }
+  .ficha-links a:hover { color: var(--signal); }
+  .ficha-links svg,
+  .ficha-links :global(.ficha-icon) { width: 13px; height: 13px; }
 
-    .project-link-preview:hover {
-        background: rgba(251, 191, 36, 0.2);
-        border-color: rgba(251, 191, 36, 0.5);
-    }
+  /* --- Prosa del caso --- */
+  .prose { max-width: 66ch; }
 
-    .link-icon {
-        width: 1.25rem;
-        height: 1.25rem;
-    }
+  .prose :global(p) {
+    font-size: var(--step-0);
+    color: var(--paper-2);
+  }
+
+  .prose :global(p + p) { margin-top: 1rem; }
+
+  .prose :global(h3) {
+    margin: var(--gap-lg) 0 0.9rem;
+    padding-top: var(--gap-md);
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-body);
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--paper);
+  }
+
+  .prose :global(h3:first-child) { margin-top: 0; padding-top: 0; border-top: 0; }
+
+  .prose :global(ul) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .prose :global(li) {
+    position: relative;
+    padding-left: 1.35rem;
+    font-size: var(--step--1);
+    color: var(--paper-2);
+  }
+
+  /* Viñeta como marca de escala, no como punto */
+  .prose :global(li)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 8px;
+    height: 1px;
+    background: var(--signal);
+  }
+
+  .prose :global(strong) {
+    font-weight: 500;
+    color: var(--paper);
+  }
+
+  /* --- Paginación --- */
+  .pager {
+    display: grid;
+    gap: 1px;
+    margin-top: var(--gap-xl);
+    border-top: 1px solid var(--rule);
+    background: var(--rule);
+  }
+
+  @media (min-width: 640px) {
+    .pager { grid-template-columns: 1fr 1fr; }
+  }
+
+  .pager-item {
+    display: grid;
+    gap: 0.4rem;
+    padding: var(--gap-md) 0;
+    background: var(--ink);
+    transition: background-color 260ms ease;
+  }
+
+  .pager-item--next { text-align: right; }
+
+  @media (min-width: 640px) {
+    .pager-item { padding-inline: var(--gap-md); }
+    .pager-item--prev { padding-left: 0; }
+    .pager-item--next { padding-right: 0; }
+  }
+
+  .pager-title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.15;
+    color: var(--paper-2);
+    transition: color 260ms ease;
+  }
+
+  .pager-item:hover .pager-title { color: var(--signal); }
 </style>

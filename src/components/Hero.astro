@@ -1,0 +1,293 @@
+---
+import LinkedIn from "../icons/LinkedInIcon.astro";
+import Github from "../icons/GithubIcon.astro";
+import Mail from "../icons/MailIcon.astro";
+import SocialPill from "./SocialPill.astro";
+
+const LINKS = {
+  linkedin:
+    "https://www.linkedin.com/in/michael-andrés-taboada-naranjo-0263171b1",
+  github: "https://github.com/MichaelTaboada2003",
+  mail: "mailto:mtaboada@utb.edu.co",
+};
+---
+
+<section id="inicio" class="hero">
+  <div class="shell">
+    <!-- Cabecera de lectura: dónde estamos, literalmente -->
+    <div class="hero-eyebrow">
+      <span class="tele">Cartagena de Indias, CO</span>
+      <span class="hero-rule ticks" aria-hidden="true"></span>
+      <span class="tele hero-coords">10°25′N&nbsp;&nbsp;75°32′W</span>
+    </div>
+
+    <div class="hero-main">
+      <h1 class="hero-name display">
+        <span class="mask"><span class="mask-in" style="--d:60ms">Michael</span></span>
+        <span class="mask"><span class="mask-in" style="--d:160ms"><em>Taboada</em></span></span>
+      </h1>
+
+      <!-- Placa de sensor: el retrato tratado como una lectura montada -->
+      <figure class="plate">
+        <div class="plate-frame">
+          <img
+            src="/yo.jpeg"
+            alt="Michael Taboada"
+            width="360"
+            height="360"
+            fetchpriority="high"
+          />
+          <span class="bracket bracket--tl" aria-hidden="true"></span>
+          <span class="bracket bracket--tr" aria-hidden="true"></span>
+          <span class="bracket bracket--bl" aria-hidden="true"></span>
+          <span class="bracket bracket--br" aria-hidden="true"></span>
+          <span class="plate-scan" aria-hidden="true"></span>
+        </div>
+        <figcaption class="tele plate-caption">
+          <span class="dot" aria-hidden="true"></span>
+          Disponible
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="hero-foot">
+      <p class="hero-thesis">
+        Construyo aplicaciones web y les conecto modelos que miden algo real:
+        <span class="mark">emoción en la voz</span>,
+        <span class="mark">cobertura del suelo</span>,
+        <span class="mark">gravedad en un video</span>.
+      </p>
+
+      <div class="hero-side">
+        <p class="tele hero-side-label">Formación</p>
+        <p class="hero-side-text">
+          Ingeniero de Sistemas y Computación por la Universidad Tecnológica de
+          Bolívar. Cursando la doble titulación en Ciencias de Datos.
+        </p>
+
+        <nav class="hero-actions" aria-label="Contacto">
+          <SocialPill href={LINKS.linkedin}>
+            <LinkedIn class="pill-icon" />
+            LinkedIn
+          </SocialPill>
+          <SocialPill href={LINKS.github}>
+            <Github class="pill-icon" />
+            GitHub
+          </SocialPill>
+          <SocialPill href={LINKS.mail}>
+            <Mail class="pill-icon" />
+            Correo
+          </SocialPill>
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-top: clamp(6rem, 4.5rem + 6vw, 8.5rem);
+    padding-bottom: var(--gap-xl);
+  }
+
+  /* --- Cabecera de lectura --- */
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: clamp(1.75rem, 1rem + 3vw, 3rem);
+    animation: fade-in 800ms cubic-bezier(.16,1,.3,1) both;
+  }
+
+  .hero-rule {
+    flex: 1;
+    min-width: 2rem;
+    opacity: 0.7;
+  }
+
+  .hero-coords {
+    color: var(--paper-3);
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 560px) {
+    .hero-coords { display: none; }
+  }
+
+  /* --- Nombre + retrato --- */
+  .hero-main {
+    display: grid;
+    gap: clamp(2rem, 1rem + 5vw, 3.5rem);
+    align-items: end;
+  }
+
+  @media (min-width: 860px) {
+    .hero-main {
+      grid-template-columns: 1fr auto;
+    }
+  }
+
+  .hero-name {
+    font-size: var(--step-7);
+    display: grid;
+  }
+
+  /* Máscara de entrada: cada línea sube desde su propio recorte */
+  .mask { display: block; overflow: hidden; padding-bottom: 0.06em; }
+
+  .mask-in {
+    display: block;
+    animation: mask-up 1000ms cubic-bezier(.16,1,.3,1) both;
+    animation-delay: var(--d, 0ms);
+  }
+
+  @keyframes mask-up {
+    from { transform: translateY(105%); }
+    to   { transform: translateY(0); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mask-in, .hero-eyebrow, .plate, .hero-foot { animation: none; }
+  }
+
+  /* --- Placa de sensor --- */
+  .plate {
+    margin: 0;
+    width: clamp(150px, 34vw, 224px);
+    animation: fade-in 900ms cubic-bezier(.16,1,.3,1) 420ms both;
+  }
+
+  .plate-frame {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--ink-3);
+  }
+
+  .plate-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.08);
+    transition: filter 600ms ease, transform 900ms cubic-bezier(.16,1,.3,1);
+  }
+
+  .plate:hover .plate-frame img {
+    filter: grayscale(0) contrast(1);
+    transform: scale(1.04);
+  }
+
+  /* Corchetes de encuadre: el lenguaje del visor */
+  .bracket {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--signal);
+    pointer-events: none;
+    transition: inset 400ms cubic-bezier(.16,1,.3,1);
+  }
+
+  .bracket--tl { top: 7px; left: 7px;  border-right: 0; border-bottom: 0; }
+  .bracket--tr { top: 7px; right: 7px; border-left: 0;  border-bottom: 0; }
+  .bracket--bl { bottom: 7px; left: 7px;  border-right: 0; border-top: 0; }
+  .bracket--br { bottom: 7px; right: 7px; border-left: 0;  border-top: 0; }
+
+  .plate:hover .bracket { width: 18px; height: 18px; }
+
+  /* Barrido: una sola pasada lenta, no un bucle llamativo */
+  .plate-scan {
+    position: absolute;
+    inset-inline: 0;
+    height: 40%;
+    top: -40%;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in srgb, var(--signal) 12%, transparent),
+      transparent
+    );
+    animation: scan 5.5s cubic-bezier(.6,0,.4,1) 1.4s 2 both;
+  }
+
+  @keyframes scan {
+    0%   { top: -40%; opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  .plate-caption {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+    color: var(--paper-2);
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--reading);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--reading) 60%, transparent);
+    animation: ping 2.4s ease-out infinite;
+  }
+
+  @keyframes ping {
+    0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--reading) 55%, transparent); }
+    70%  { box-shadow: 0 0 0 7px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+
+  /* --- Tesis + formación --- */
+  .hero-foot {
+    display: grid;
+    gap: var(--gap-lg);
+    margin-top: clamp(2.5rem, 1.5rem + 5vw, 4.5rem);
+    padding-top: var(--gap-md);
+    border-top: 1px solid var(--rule);
+    animation: fade-in 900ms cubic-bezier(.16,1,.3,1) 620ms both;
+  }
+
+  @media (min-width: 860px) {
+    .hero-foot {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: clamp(2rem, 1rem + 4vw, 4rem);
+    }
+  }
+
+  .hero-thesis {
+    font-size: var(--step-2);
+    line-height: 1.4;
+    letter-spacing: -0.012em;
+    color: var(--paper);
+    max-width: 22ch;
+  }
+
+  /* Subrayado bajo la línea base: señala sin romper el ritmo del párrafo */
+  .hero-thesis .mark {
+    box-shadow: inset 0 -0.12em 0 color-mix(in srgb, var(--signal) 55%, transparent);
+  }
+
+  .hero-side-label { margin-bottom: 0.5rem; }
+
+  .hero-side-text {
+    font-size: var(--step--1);
+    color: var(--paper-2);
+    max-width: 42ch;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: var(--gap-md);
+  }
+</style>

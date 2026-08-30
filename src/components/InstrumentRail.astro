@@ -1,0 +1,173 @@
+---
+/*
+  InstrumentRail — elemento firma.
+  Un riel de medición fijo en el borde izquierdo. Las marcas dan escala,
+  el cursor sigue la posición de scroll y el rótulo imprime la lectura.
+  Es orientación real, no decoración: dice dónde estás y cuánto falta.
+*/
+const SECTIONS = [
+  { id: "inicio", code: "00" },
+  { id: "trayectoria", code: "01" },
+  { id: "proyectos", code: "02" },
+  { id: "instrumental", code: "03" },
+  { id: "sobre-mi", code: "04" },
+  { id: "contacto", code: "05" },
+];
+---
+
+<aside class="rail" aria-hidden="true">
+  <div class="rail-scale">
+    {Array.from({ length: 41 }).map((_, i) => (
+      <span class={`rail-tick ${i % 5 === 0 ? "rail-tick--major" : ""}`}></span>
+    ))}
+  </div>
+
+  <div class="rail-cursor" id="rail-cursor">
+    <span class="rail-cursor-bar"></span>
+    <span class="rail-cursor-read tele" id="rail-read">00.0</span>
+  </div>
+
+  <div class="rail-foot tele" id="rail-section">INICIO</div>
+</aside>
+
+<script is:inline define:vars={{ SECTIONS }}>
+  (function () {
+    function boot() {
+      var cursor = document.getElementById("rail-cursor");
+      var read = document.getElementById("rail-read");
+      var label = document.getElementById("rail-section");
+      if (!cursor || !read || !label) return;
+
+      var ticking = false;
+
+      function update() {
+        ticking = false;
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+
+        cursor.style.transform = "translateY(" + (p * 100) + "%)";
+        read.textContent = (p * 100).toFixed(1);
+
+        // Sección visible más cercana al tercio superior de la ventana
+        var best = null;
+        var bestD = Infinity;
+        for (var i = 0; i < SECTIONS.length; i++) {
+          var el = document.getElementById(SECTIONS[i].id);
+          if (!el) continue;
+          var d = Math.abs(el.getBoundingClientRect().top - window.innerHeight * 0.3);
+          if (d < bestD) { bestD = d; best = SECTIONS[i]; }
+        }
+        if (best) label.textContent = best.code + " · " + best.id.replace("-", " ");
+      }
+
+      function onScroll() {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+      update();
+    }
+
+    document.addEventListener("astro:page-load", boot);
+    if (document.readyState !== "loading") boot();
+  })();
+</script>
+
+<style>
+  .rail {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--rail-w);
+    z-index: 5;
+    display: none;
+    pointer-events: none;
+    padding: 7.5rem 0 3rem 14px;
+    border-right: 1px solid var(--rule);
+    background: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--ink) 90%, transparent),
+      transparent
+    );
+  }
+
+  @media (min-width: 1080px) {
+    .rail { display: block; }
+  }
+
+  /* Escala: marcas equiespaciadas, cada quinta más larga */
+  .rail-scale {
+    position: absolute;
+    inset: 7.5rem 0 3rem 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-left: 0;
+  }
+
+  .rail-tick {
+    display: block;
+    width: 7px;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .rail-tick--major {
+    width: 14px;
+    background: var(--paper-3);
+    opacity: 0.55;
+  }
+
+  /* Cursor: la aguja del instrumento */
+  .rail-cursor {
+    position: absolute;
+    left: 14px;
+    top: 7.5rem;
+    height: calc(100% - 10.5rem);
+    width: 100%;
+    will-change: transform;
+    transition: transform 120ms linear;
+  }
+
+  .rail-cursor-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background: var(--signal);
+    box-shadow: 0 0 12px var(--glow);
+  }
+
+  .rail-cursor-read {
+    position: absolute;
+    top: 9px;
+    left: 0;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--signal);
+    opacity: 0.9;
+  }
+
+  .rail-cursor-read::after {
+    content: "%";
+    opacity: 0.45;
+    margin-left: 1px;
+  }
+
+  /* Rótulo de sección, rotado contra el riel */
+  .rail-foot {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform-origin: left bottom;
+    transform: rotate(-90deg) translateX(0);
+    white-space: nowrap;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    color: var(--paper-3);
+  }
+</style>

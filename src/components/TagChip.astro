@@ -1,0 +1,50 @@
+---
+interface Props {
+  tag: { name: string; color?: string; icon?: any };
+  size?: "sm" | "md";
+}
+const { tag, size = "md" } = Astro.props;
+---
+
+<span class={`chip chip--${size}`} style={`--brand:${tag.color ?? "currentColor"}`}>
+  <span class="chip-dot" aria-hidden="true"></span>
+  {tag.name}
+</span>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.22rem 0.55rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--paper-2);
+    white-space: nowrap;
+    transition: border-color 260ms ease, color 260ms ease;
+  }
+
+  .chip--sm {
+    font-size: 0.6rem;
+    padding: 0.16rem 0.42rem;
+    gap: 0.32rem;
+  }
+
+  /* El color de marca vive en un punto de 5px: presente, nunca dominante */
+  .chip-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--brand);
+    flex: none;
+  }
+
+  .chip:hover {
+    border-color: color-mix(in srgb, var(--brand) 45%, var(--rule));
+    color: var(--paper);
+  }
+</style>

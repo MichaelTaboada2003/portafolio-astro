@@ -1,212 +1,86 @@
 ---
-
+/*
+  Movimiento del sitio. Dos piezas, nada más:
+  1. Scroll suave con Lenis.
+  2. Revelado al entrar en pantalla con IntersectionObserver.
+  El revelado se hace en CSS; el JS solo pone la clase. Si el JS no carga,
+  el contenido queda visible igualmente.
+*/
 ---
 
 <script>
-    import Lenis from "lenis";
-    import gsap from "gsap";
-    import { ScrollTrigger } from "gsap/ScrollTrigger";
+  let lenis: any = null;
 
-    // Registrar ScrollTrigger
-    gsap.registerPlugin(ScrollTrigger);
+  async function initSmoothScroll() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (lenis) return;
 
-    document.addEventListener("astro:page-load", () => {
-        try {
-            // Respetar preferencias de movimiento reducido
-            const prefersReducedMotion = window.matchMedia(
-                "(prefers-reduced-motion: reduce)",
-            ).matches;
-
-            if (!prefersReducedMotion) {
-                // Inicializar Lenis para scroll suave
-                const lenis = new Lenis({
-                    duration: 1.2,
-                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                    orientation: "vertical",
-                    smoothWheel: true,
-                });
-
-                // Integrar Lenis con GSAP ScrollTrigger
-                lenis.on("scroll", ScrollTrigger.update);
-
-                gsap.ticker.add((time) => {
-                    lenis.raf(time * 1000);
-                });
-
-                gsap.ticker.lagSmoothing(0);
-
-                // Animación del Hero - texto principal
-                // delay: 0.2s + duration: 1s → termina en 1.2s ≤ 1.5s ✓
-                const heroTitle = document.querySelector(".hero-title");
-                if (heroTitle) {
-                    gsap.fromTo(
-                        heroTitle,
-                        { opacity: 0, y: 50 },
-                        {
-                            opacity: 1,
-                            y: 0,
-                            duration: 1,
-                            ease: "power3.out",
-                            delay: 0.2,
-                            onComplete: () => {
-                                (heroTitle as HTMLElement).style.willChange =
-                                    "auto";
-                            },
-                        },
-                    );
-                }
-
-                // delay: 0.5s + duration: 0.8s → termina en 1.3s ≤ 1.5s ✓
-                const heroSubtitle = document.querySelector(".hero-subtitle");
-                if (heroSubtitle) {
-                    gsap.fromTo(
-                        heroSubtitle,
-                        { opacity: 0, y: 30 },
-                        {
-                            opacity: 1,
-                            y: 0,
-                            duration: 0.8,
-                            ease: "power3.out",
-                            delay: 0.5,
-                            onComplete: () => {
-                                (heroSubtitle as HTMLElement).style.willChange =
-                                    "auto";
-                            },
-                        },
-                    );
-                }
-
-                // delay: 0.8s + duration: 0.6s → termina en 1.4s ≤ 1.5s ✓
-                const heroSocialNav =
-                    document.querySelector(".hero-social-nav");
-                if (heroSocialNav) {
-                    gsap.fromTo(
-                        heroSocialNav,
-                        { opacity: 0, y: 20 },
-                        {
-                            opacity: 1,
-                            y: 0,
-                            duration: 0.6,
-                            ease: "power3.out",
-                            delay: 0.8,
-                            onComplete: () => {
-                                (
-                                    heroSocialNav as HTMLElement
-                                ).style.willChange = "auto";
-                            },
-                        },
-                    );
-                }
-
-                // Animación de secciones al hacer scroll
-                gsap.utils
-                    .toArray(".section-animate")
-                    .forEach((section: any) => {
-                        gsap.fromTo(
-                            section,
-                            { opacity: 0, y: 60 },
-                            {
-                                opacity: 1,
-                                y: 0,
-                                duration: 0.8,
-                                ease: "power2.out",
-                                scrollTrigger: {
-                                    trigger: section,
-                                    start: "top 85%",
-                                    end: "top 50%",
-                                    toggleActions: "play none none reverse",
-                                },
-                            },
-                        );
-                    });
-
-                // Animación de cards de proyectos
-                gsap.utils
-                    .toArray(".project-card")
-                    .forEach((card: any, index: number) => {
-                        gsap.fromTo(
-                            card,
-                            { opacity: 0, y: 40, scale: 0.95 },
-                            {
-                                opacity: 1,
-                                y: 0,
-                                scale: 1,
-                                duration: 0.6,
-                                ease: "power2.out",
-                                delay: index * 0.1,
-                                scrollTrigger: {
-                                    trigger: card,
-                                    start: "top 90%",
-                                    toggleActions: "play none none none",
-                                },
-                            },
-                        );
-                    });
-
-                // Animación de items de experiencia
-                gsap.utils
-                    .toArray(".experience-item")
-                    .forEach((item: any, index: number) => {
-                        gsap.fromTo(
-                            item,
-                            { opacity: 0, x: -30 },
-                            {
-                                opacity: 1,
-                                x: 0,
-                                duration: 0.5,
-                                ease: "power2.out",
-                                delay: index * 0.15,
-                                scrollTrigger: {
-                                    trigger: item,
-                                    start: "top 85%",
-                                    toggleActions: "play none none none",
-                                },
-                            },
-                        );
-                    });
-
-                // Animación de la línea del timeline
-                gsap.fromTo(
-                    ".experience-timeline::before",
-                    { scaleY: 0 },
-                    {
-                        scaleY: 1,
-                        duration: 1.5,
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: ".experience-timeline",
-                            start: "top 80%",
-                            toggleActions: "play none none none",
-                        },
-                    },
-                );
-
-                // Animación de tags con stagger
-                gsap.utils
-                    .toArray(".project-tags")
-                    .forEach((tagGroup: any) => {
-                        const tags = tagGroup.querySelectorAll("li");
-                        gsap.fromTo(
-                            tags,
-                            { opacity: 0, scale: 0.8 },
-                            {
-                                opacity: 1,
-                                scale: 1,
-                                duration: 0.3,
-                                stagger: 0.05,
-                                ease: "back.out(1.7)",
-                                scrollTrigger: {
-                                    trigger: tagGroup,
-                                    start: "top 90%",
-                                    toggleActions: "play none none none",
-                                },
-                            },
-                        );
-                    });
-            }
-        } catch (e) {
-            // Silently fail if GSAP/Lenis not loaded
-            console.warn("Animations failed to initialize:", e);
-        }
+    const { default: Lenis } = await import("lenis");
+    lenis = new Lenis({
+      duration: 1.05,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
     });
+
+    const raf = (time: number) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+
+    // Lenis toma el control del scroll y anula el salto al ancla del navegador,
+    // así que un enlace directo a /#proyectos aterrizaba arriba. Lo reponemos.
+    if (location.hash) {
+      const target = document.querySelector(location.hash);
+      if (target) lenis.scrollTo(target as HTMLElement, { offset: -88, immediate: true });
+    }
+
+    // Los enlaces internos deben pasar por Lenis o el salto se siente roto
+    document.addEventListener("click", (e) => {
+      const link = (e.target as HTMLElement)?.closest?.<HTMLAnchorElement>(
+        'a[href*="#"]',
+      );
+      if (!link) return;
+      const url = new URL(link.href, location.href);
+      if (url.pathname !== location.pathname) return;
+      const target = url.hash ? document.querySelector(url.hash) : null;
+      if (!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target as HTMLElement, { offset: -88 });
+      history.pushState(null, "", url.hash);
+    });
+  }
+
+  function initReveal() {
+    const items = document.querySelectorAll("[data-reveal]");
+    if (!items.length) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      items.forEach((el) => el.classList.add("is-in"));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-in");
+          io.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.1 },
+    );
+
+    items.forEach((el) => io.observe(el));
+  }
+
+  function boot() {
+    initSmoothScroll();
+    initReveal();
+  }
+
+  document.addEventListener("astro:page-load", boot);
+  document.addEventListener("astro:before-swap", () => {
+    lenis?.scrollTo(0, { immediate: true });
+  });
 </script>

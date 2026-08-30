@@ -1,0 +1,132 @@
+---
+const MAIL = "mtaboada@utb.edu.co";
+const LINKS = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/michael-andrés-taboada-naranjo-0263171b1",
+  },
+  { label: "GitHub", href: "https://github.com/MichaelTaboada2003" },
+];
+---
+
+<section id="contacto" class="section contact">
+  <div class="shell">
+    <div class="contact-inner">
+      <p class="tele contact-status">
+        <span class="dot" aria-hidden="true"></span>
+        Disponible para trabajar · Cartagena / remoto
+      </p>
+
+      <h2 class="contact-title display" data-reveal>
+        ¿Tienes algo que <em>medir</em>, construir o poner en producción?
+      </h2>
+
+      <a class="contact-mail" href={`mailto:${MAIL}`} data-reveal style="--d:120ms">
+        <span class="contact-mail-text">{MAIL}</span>
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+          <path d="M4 12L12 4M12 4H6M12 4v6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+
+      <ul class="contact-links" data-reveal style="--d:200ms">
+        {
+          LINKS.map((l) => (
+            <li>
+              <a href={l.href} target="_blank" rel="noopener noreferrer">
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    border-top: 1px solid var(--rule);
+    padding-bottom: var(--gap-lg);
+  }
+
+  .contact-inner { max-width: 46rem; }
+
+  .contact-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--paper-2);
+    margin-bottom: var(--gap-md);
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--reading);
+  }
+
+  .contact-title {
+    font-size: var(--step-5);
+    line-height: 1.02;
+    color: var(--paper);
+  }
+
+  /* El correo es el único elemento del sitio que se subraya en reposo:
+     es la acción que la página existe para provocar. */
+  .contact-mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--gap-lg);
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    letter-spacing: -0.02em;
+    color: var(--signal);
+  }
+
+  .contact-mail-text {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 1px;
+    padding-bottom: 2px;
+    transition: background-size 420ms cubic-bezier(.16,1,.3,1);
+  }
+
+  .contact-mail:hover .contact-mail-text { background-size: 0% 1px; }
+
+  .contact-mail svg {
+    width: 15px;
+    height: 15px;
+    transition: transform 320ms cubic-bezier(.16,1,.3,1);
+  }
+
+  .contact-mail:hover svg { transform: translate(3px, -3px); }
+
+  .contact-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: var(--gap-md) 0 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Área táctil de dedo: el relleno crece y el margen lo compensa,
+     así el diseño no se mueve y el toque llega a ~44px. */
+  @media (pointer: coarse) {
+    .contact-links a, .contact-mail { padding-block: 0.7rem; margin-block: -0.7rem; }
+  }
+
+  .contact-links a {
+    color: var(--paper-3);
+    transition: color 220ms ease;
+  }
+
+  .contact-links a:hover { color: var(--paper); }
+</style>

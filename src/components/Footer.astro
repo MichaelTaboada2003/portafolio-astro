@@ -1,19 +1,33 @@
-<footer class="m-4 mt-16 w-full mx-auto container lg:max-w-4xl md:max-w-2xl flex justify-center">
-    <div class="max-w-screen-xl mx-auto md:flex md:items-center md:justify-between py-4">
-        <span class="footer-text sm:text-center">© 2024 - Michael. Portafolio basado en <a href="https://github.com/midudev/porfolio.dev" target="_blank" class="hover:underline">midudev</a></span>
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="shell">
+    <div class="foot-inner">
+      <p class="tele">© {year} Michael Taboada</p>
+      <span class="foot-rule ticks" aria-hidden="true"></span>
     </div>
+  </div>
 </footer>
 
 <style>
-  footer {
-    border-top: 1px solid var(--color-border);
-    background: var(--color-surface);
-    opacity: 0.8;
+  .foot {
+    margin-top: auto;
+    padding-block: var(--gap-md) var(--gap-lg);
+    border-top: 1px solid var(--rule);
   }
 
-  .footer-text {
-    color: var(--color-text-muted);
-    font-size: 0.875rem;
-    display: block;
+  .foot-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .foot-rule {
+    flex: 1;
+    min-width: 2rem;
+    opacity: 0.6;
   }
 </style>
