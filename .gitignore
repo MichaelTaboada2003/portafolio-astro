@@ -21,3 +21,5 @@ pnpm-debug.log*
 .DS_Store
 
 .vscode
+# lockfile de npm: este proyecto usa pnpm (ver packageManager en package.json)
+package-lock.json
