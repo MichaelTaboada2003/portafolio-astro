@@ -178,7 +178,7 @@ export const ALL_PROJECTS: Project[] = [
 **Logros:**
 - +55 usuarios activos
 - Sistema de recomendaciones basado en IA`,
-        image: '/networking.png',
+        image: '/networking.webp',
         tags: [TAGS.REACT, TAGS.TAILWIND, TAGS.SUPABASE, TAGS.GROQ],
         preview: 'https://networking-livid.vercel.app/',
         featured: true,
@@ -206,7 +206,7 @@ export const ALL_PROJECTS: Project[] = [
 - Backend: Python 3, Flask, scikit-learn, transformers (HuggingFace)
 - Frontend: HTML/CSS/JS (simulador de decisiones en cliente)
 - ML: wav2vec2, librosa, numpy, scipy`,
-        image: '/clasificador-audios.png',
+        image: '/clasificador-audios.webp',
         tags: [TAGS.PYTHON, TAGS.FLASK],
         github: 'https://github.com/MichaelTaboada2003/audio-ml-classifier',
         featured: true,
@@ -230,7 +230,7 @@ export const ALL_PROJECTS: Project[] = [
 - Three.js para visualizaciones 3D
 - Python para procesamiento de datos
 - Groq para análisis con IA`,
-        image: '/AWorldAway.png',
+        image: '/AWorldAway.webp',
         tags: [TAGS.PYTHON, TAGS.VUE, TAGS.THREEJS, TAGS.GROQ],
         github: 'https://github.com/MichaelTaboada2003/AWorldAway_Nasa2025',
         preview: 'https://a-world-away-nasa2025-web.vercel.app/es-ES',
@@ -256,7 +256,7 @@ export const ALL_PROJECTS: Project[] = [
 - Supabase para base de datos y autenticación
 - Tailwind CSS para estilos
 - TypeScript para tipado estático`,
-        image: '/shainy.png',
+        image: '/shainy.webp',
         tags: [TAGS.NEXTJS, TAGS.SUPABASE, TAGS.TAILWIND, TAGS.TYPESCRIPT],
     },
     {
@@ -278,7 +278,7 @@ export const ALL_PROJECTS: Project[] = [
 - React Native con Expo para desarrollo multiplataforma
 - TypeScript para tipado estático
 - AsyncStorage para persistencia de datos`,
-        image: '/gym-tracker.png',
+        image: '/gym-tracker.webp',
         tags: [TAGS.REACT_NATIVE, TAGS.EXPO, TAGS.TYPESCRIPT],
         github: 'https://github.com/MichaelTaboada2003/gym-tracker',
     },
@@ -301,7 +301,7 @@ export const ALL_PROJECTS: Project[] = [
 - Three.js para visualizaciones 3D
 - FastAPI (Python) para el backend
 - Datos astronómicos de catálogos científicos`,
-        image: '/exosky.png',
+        image: '/exosky.webp',
         tags: [TAGS.REACT, TAGS.PYTHON, TAGS.THREEJS, TAGS.TAILWIND],
         github: 'https://github.com/MichaelTaboada2003/Exosky-Nasa-Space-App-2024',
     },
@@ -318,7 +318,7 @@ export const ALL_PROJECTS: Project[] = [
 - Integración de IA para contenido dinámico
 - Interfaz moderna y responsive
 - Calendario interactivo`,
-        image: '/novenas.png',
+        image: '/novenas.webp',
         tags: [TAGS.NEXTJS, TAGS.TAILWIND, TAGS.TYPESCRIPT],
     },
     {
@@ -344,11 +344,23 @@ export const ALL_PROJECTS: Project[] = [
 - Frontend: React 19, TypeScript, Vite, Tailwind CSS
 - Visión: OpenCV, numpy, scipy
 - ML: scikit-learn, rasterio, pystac-client`,
-        image: '/hub-sensado.png',
+        image: '/hub-sensado.webp',
         tags: [TAGS.PYTHON, TAGS.REACT, TAGS.FASTAPI, TAGS.OPENCV, TAGS.TYPESCRIPT, TAGS.SCIKIT],
         github: 'https://github.com/MichaelTaboada2003/physics-sensing-automation',
     },
 ]
+
+/*
+  Cada imagen existe en tres tamaños, cada uno con su trabajo:
+    x.webp        1920px  detalle del proyecto
+    x-card.webp   1040px  tarjetas y carrusel
+    x-og.jpg      1200px  vista previa al compartir
+
+  El JPEG de compartir no es un descuido: algunos rastreadores de redes
+  siguen sin mostrar WebP, y un enlace sin miniatura pesa más que unos KB.
+*/
+export const cardSrc = (image: string) => image.replace('.webp', '-card.webp');
+export const ogSrc = (image: string) => image.replace('.webp', '-og.jpg');
 
 // Derived helpers — no duplication
 export const getFeaturedProjects = () => ALL_PROJECTS.filter(p => p.featured);

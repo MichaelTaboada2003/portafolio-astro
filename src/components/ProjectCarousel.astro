@@ -1,0 +1,450 @@
+---
+import TagChip from "./TagChip.astro";
+import { cardSrc } from "../data/projects";
+import type { Project } from "../data/projects";
+
+interface Props {
+  projects: Project[];
+}
+const { projects } = Astro.props;
+---
+
+<section class="carousel" aria-labelledby="carousel-title">
+  <h2 id="carousel-title" class="sr-only">Todos los proyectos</h2>
+
+  <!-- Barra de control: lectura, progreso y avance. Mismo lenguaje que el riel. -->
+  <div class="bar">
+    <p class="tele bar-read">
+      <span class="bar-current" id="carousel-current">01</span>
+      <span class="bar-sep">/</span>
+      <span class="bar-total">{String(projects.length).padStart(2, "0")}</span>
+    </p>
+
+    <div class="gauge" aria-hidden="true">
+      <span class="gauge-ticks ticks"></span>
+      <span class="gauge-fill" id="carousel-gauge"></span>
+    </div>
+
+    <div class="bar-nav">
+      <button type="button" class="nav-btn" id="carousel-prev" aria-label="Proyecto anterior">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+      <button type="button" class="nav-btn" id="carousel-next" aria-label="Proyecto siguiente">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!--
+    Pista con scroll nativo: el táctil y el teclado funcionan sin JS.
+    La rueda se reparte en el script: el gesto horizontal mueve la pista y el
+    vertical se deja pasar para que Lenis siga desplazando la página.
+  -->
+  <div
+    class="track"
+    id="carousel-track"
+    tabindex="0"
+    role="group"
+    aria-label={`${projects.length} proyectos, desplazable en horizontal`}
+  >
+    {
+      projects.map((p, i) => (
+        <article class="slide" data-slide>
+          <a class="slide-shot" href={`/proyecto/${p.slug}`} tabindex="-1" aria-hidden="true">
+            <img src={cardSrc(p.image)} alt="" loading={i === 0 ? "eager" : "lazy"} width="1040" height="650" />
+            <span class="bracket bracket--tl" />
+            <span class="bracket bracket--br" />
+          </a>
+
+          <p class="slide-meta">
+            <span class="tele slide-num">{String(i + 1).padStart(2, "0")}</span>
+            <span class="slide-rule" />
+            <span class="tele">{p.context}</span>
+            {p.featured && <span class="tele slide-star">Destacado</span>}
+          </p>
+
+          <h3 class="slide-title">
+            <a href={`/proyecto/${p.slug}`}>{p.title}</a>
+          </h3>
+
+          <p class="slide-text">{p.description}</p>
+
+          <ul class="slide-tags">
+            {p.tags.slice(0, 3).map((t) => (
+              <li><TagChip tag={t} size="sm" /></li>
+            ))}
+            {p.tags.length > 3 && <li class="tele slide-more">+{p.tags.length - 3}</li>}
+          </ul>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  function initCarousel() {
+    const track = document.getElementById("carousel-track");
+    const prev = document.getElementById("carousel-prev") as HTMLButtonElement | null;
+    const next = document.getElementById("carousel-next") as HTMLButtonElement | null;
+    const current = document.getElementById("carousel-current");
+    const gauge = document.getElementById("carousel-gauge");
+    if (!track || !prev || !next || !current || !gauge) return;
+
+    const slides = Array.from(track.querySelectorAll<HTMLElement>("[data-slide]"));
+    if (!slides.length) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const carousel = track.closest(".carousel");
+    carousel?.classList.add("is-ready");
+
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+
+    // Diapositiva activa: la más cercana al borde izquierdo de la pista
+    const activeIndex = () => {
+      const left = track.scrollLeft;
+      let best = 0;
+      let bestD = Infinity;
+      slides.forEach((s, i) => {
+        const d = Math.abs(s.offsetLeft - slides[0].offsetLeft - left);
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      return best;
+    };
+
+    let ticking = false;
+    const render = () => {
+      ticking = false;
+      const max = maxScroll();
+      const left = track.scrollLeft;
+      const p = max > 0 ? Math.min(1, Math.max(0, left / max)) : 0;
+
+      // La aguja ocupa la fracción visible y recorre el resto de la pista
+      const visible = track.clientWidth / track.scrollWidth;
+      gauge.style.width = `${visible * 100}%`;
+      gauge.style.transform = `translateX(${(p * (1 - visible) * 100) / visible}%)`;
+
+      current.textContent = String(activeIndex() + 1).padStart(2, "0");
+
+      prev.disabled = left <= 1;
+      next.disabled = left >= max - 1;
+    };
+
+    const onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(render); }
+    };
+
+    // Se navega a una diapositiva concreta, no por desplazamiento relativo:
+    // con clics rápidos, sumar sobre una posición aún en movimiento deriva.
+    const goTo = (i: number) => {
+      const target = slides[Math.min(slides.length - 1, Math.max(0, i))];
+      track.scrollTo({
+        left: target.offsetLeft - slides[0].offsetLeft,
+        behavior: reduce ? "auto" : "smooth",
+      });
+    };
+
+    let intent = 0;
+    let intentAt = 0;
+    const go = (dir: number) => {
+      const now = performance.now();
+      // Clics encadenados parten del destino anterior, no de dónde va la animación
+      const from = now - intentAt < 700 ? intent : activeIndex();
+      intent = Math.min(slides.length - 1, Math.max(0, from + dir));
+      intentAt = now;
+      goTo(intent);
+      // La lectura salta al destino en el acto: esperar a que el scroll suave
+      // llegue haría que el número fuera por detrás del clic.
+      current.textContent = String(intent + 1).padStart(2, "0");
+      prev.disabled = intent === 0;
+      next.disabled = intent === slides.length - 1;
+    };
+
+    prev.addEventListener("click", () => go(-1));
+    next.addEventListener("click", () => go(1));
+
+    // Lenis intercepta la rueda en window y descarta el scroll anidado
+    // horizontal. Este listener corre antes (fase de destino) y se queda solo
+    // con el gesto horizontal; el vertical sigue su camino hacia la página.
+    track.addEventListener(
+      "wheel",
+      (e) => {
+        if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        e.preventDefault();
+        track.scrollLeft += e.deltaX;
+      },
+      { passive: false },
+    );
+
+    track.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    // Arrastre con el puntero en escritorio. El ratón arrastra; el táctil ya
+    // tiene su propio desplazamiento nativo y no se toca.
+    let dragging = false;
+    let startX = 0;
+    let startLeft = 0;
+
+    track.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "touch") return;
+      if ((e.target as HTMLElement).closest("a")) return;
+      dragging = true;
+      startX = e.clientX;
+      startLeft = track.scrollLeft;
+      track.classList.add("is-dragging");
+    });
+
+    track.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 3) track.setPointerCapture(e.pointerId);
+      track.scrollLeft = startLeft - dx;
+    });
+
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove("is-dragging");
+    };
+    track.addEventListener("pointerup", endDrag);
+    track.addEventListener("pointercancel", endDrag);
+
+    render();
+  }
+
+  document.addEventListener("astro:page-load", initCarousel);
+</script>
+
+<style>
+  .carousel {
+    margin-top: var(--gap-lg);
+  }
+
+  /* --- Barra de control --- */
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: var(--gap-md);
+  }
+
+  .bar-read {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    color: var(--paper-2);
+    flex: none;
+  }
+
+  .bar-current { color: var(--signal); }
+  .bar-sep { opacity: 0.4; }
+
+  /* Indicador de posición: una escala, no una fila de puntos.
+     Funciona igual con 8 proyectos que con 40. */
+  .gauge {
+    position: relative;
+    flex: 1;
+    height: 6px;
+    min-width: 2rem;
+    overflow: hidden;
+  }
+
+  .gauge-ticks {
+    position: absolute;
+    inset: 0;
+    opacity: 0.7;
+  }
+
+  .gauge-fill {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    height: 2px;
+    width: 30%;
+    background: var(--signal);
+    box-shadow: 0 0 10px var(--glow);
+    transition: transform 220ms cubic-bezier(.16,1,.3,1), width 220ms ease;
+  }
+
+  .bar-nav {
+    display: flex;
+    gap: 0.4rem;
+    flex: none;
+    visibility: hidden;
+  }
+
+  /* Los botones solo sirven con JS; hasta entonces no se anuncian */
+  .carousel.is-ready .bar-nav { visibility: visible; }
+
+  .nav-btn {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--paper-2);
+    cursor: pointer;
+    transition: color 200ms ease, border-color 200ms ease, background-color 200ms ease, opacity 200ms ease;
+  }
+
+  .nav-btn svg { width: 15px; height: 15px; }
+
+  .nav-btn:hover:not(:disabled) {
+    color: var(--signal);
+    border-color: color-mix(in srgb, var(--signal) 45%, transparent);
+    background: color-mix(in srgb, var(--signal) 10%, transparent);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  @media (pointer: coarse) {
+    .nav-btn { width: 44px; height: 44px; }
+  }
+
+  /* --- Pista --- */
+  .track {
+    display: flex;
+    gap: var(--gap-md);
+    overflow-x: auto;
+    overflow-y: clip;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: 0.5rem;
+    /* El desvanecido del borde derecho dice que hay más sin recortar nada */
+    mask-image: linear-gradient(to right, #000 93%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, #000 93%, transparent 100%);
+  }
+
+  .track::-webkit-scrollbar { display: none; }
+
+  .track:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: 6px;
+  }
+
+  .track.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+  }
+
+  .track.is-dragging a { pointer-events: none; }
+
+  .slide {
+    flex: 0 0 clamp(258px, 72vw, 376px);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- Tarjeta --- */
+  .slide-shot {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--ink-3);
+  }
+
+  .slide-shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    opacity: 0.92;
+    transition: transform 900ms cubic-bezier(.16,1,.3,1), opacity 450ms ease;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  .slide:hover .slide-shot img { transform: scale(1.04); opacity: 1; }
+
+  .bracket {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--signal);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 280ms ease;
+  }
+
+  .bracket--tl { top: 9px; left: 9px; border-right: 0; border-bottom: 0; }
+  .bracket--br { bottom: 9px; right: 9px; border-left: 0; border-top: 0; }
+
+  .slide:hover .bracket { opacity: 1; }
+
+  .slide-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 1rem 0 0.55rem;
+  }
+
+  .slide-num { color: var(--paper-2); }
+  .slide-rule { width: 20px; height: 1px; background: var(--rule); }
+
+  .slide-star {
+    color: var(--signal);
+    padding: 0.1rem 0.4rem;
+    border: 1px solid color-mix(in srgb, var(--signal) 30%, transparent);
+    border-radius: 3px;
+    font-size: 0.58rem;
+  }
+
+  .slide-title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--paper);
+  }
+
+  .slide-title a {
+    background-image: linear-gradient(var(--signal), var(--signal));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition: background-size 420ms cubic-bezier(.16,1,.3,1);
+  }
+
+  .slide-title a:hover { background-size: 100% 1px; }
+
+  .slide-text {
+    margin-top: 0.6rem;
+    font-size: var(--step--1);
+    color: var(--paper-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .slide-tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    /* Las tarjetas tienen títulos de distinta altura: anclar las etiquetas
+       abajo les da una línea base común. */
+    align-self: flex-start;
+    margin-top: auto;
+    padding-top: 0.9rem;
+  }
+
+  .slide-more { color: var(--paper-3); padding-left: 0.2rem; }
+</style>

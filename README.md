@@ -111,6 +111,27 @@ npm run preview  # sirve dist/ localmente
   (negritas, viñetas, encabezados de una línea) y se renderiza a HTML real en
   `proyecto/[slug].astro`.
 
+### Imágenes
+
+Cada captura existe en tres tamaños dentro de `public/`, y cada uno tiene un
+trabajo concreto:
+
+| Fichero | Ancho | Dónde se usa |
+| --- | --- | --- |
+| `x.webp` | 1920px | Página de detalle del proyecto |
+| `x-card.webp` | 1040px | Tarjetas de la portada y carrusel |
+| `x-og.jpg` | 1200px | Vista previa al compartir el enlace |
+
+Las dos primeras variantes se derivan con `cardSrc()` en `src/data/projects.ts`,
+así que la fuente de verdad sigue siendo un único campo `image`.
+
+La vista previa social se queda en JPEG a propósito: algunos rastreadores de
+redes todavía no muestran WebP, y un enlace compartido sin miniatura cuesta más
+que los kilobytes que ahorraría.
+
+Los originales sin comprimir viven en `assets-originales/`, fuera de `public/`
+para que no se desplieguen. Si necesitas regenerar las variantes, parte de ahí.
+
 ## Accesibilidad
 
 - Contraste AA verificado en ambos temas, incluidos los tonos apagados que

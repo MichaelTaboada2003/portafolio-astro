@@ -1,5 +1,5 @@
 ---
-import { getFeaturedProjects } from "../data/projects";
+import { getFeaturedProjects, cardSrc } from "../data/projects";
 import GithubIcon from "../icons/GithubIcon.astro";
 import TagChip from "./TagChip.astro";
 
@@ -15,7 +15,7 @@ const FEATURED = getFeaturedProjects();
           href={`/proyecto/${p.slug}`}
           aria-label={`Ver detalles de ${p.title}`}
         >
-          <img src={p.image} alt="" loading="lazy" width="800" height="500" />
+          <img src={cardSrc(p.image)} alt="" loading="lazy" width="1040" height="650" />
           <span class="bracket bracket--tl" aria-hidden="true" />
           <span class="bracket bracket--tr" aria-hidden="true" />
           <span class="bracket bracket--bl" aria-hidden="true" />

@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import TagChip from "../components/TagChip.astro";
+import ProjectCarousel from "../components/ProjectCarousel.astro";
 import { getAllProjects } from "../data/projects";
 
 const PROJECTS = getAllProjects();
@@ -28,45 +28,7 @@ const PROJECTS = getAllProjects();
         </p>
       </header>
 
-      <ul class="archive-grid">
-        {
-          PROJECTS.map((p, i) => (
-            <li class="tile" data-reveal style={`--d:${(i % 2) * 80}ms`}>
-              <a class="tile-shot" href={`/proyecto/${p.slug}`}>
-                <img src={p.image} alt="" loading="lazy" width="640" height="400" />
-                <span class="bracket bracket--tl" aria-hidden="true" />
-                <span class="bracket bracket--br" aria-hidden="true" />
-              </a>
-
-              <div class="tile-body">
-                <p class="tile-meta">
-                  <span class="tele tile-num">{String(i + 1).padStart(2, "0")}</span>
-                  <span class="tile-rule" aria-hidden="true" />
-                  <span class="tele">{p.context}</span>
-                  {p.featured && <span class="tele tile-star">Destacado</span>}
-                </p>
-
-                <h2 class="tile-title">
-                  <a href={`/proyecto/${p.slug}`}>{p.title}</a>
-                </h2>
-
-                <p class="tile-text">{p.description}</p>
-
-                <ul class="tile-tags">
-                  {p.tags.slice(0, 4).map((t) => (
-                    <li>
-                      <TagChip tag={t} size="sm" />
-                    </li>
-                  ))}
-                  {p.tags.length > 4 && (
-                    <li class="tele tile-more">+{p.tags.length - 4}</li>
-                  )}
-                </ul>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
+      <ProjectCarousel projects={PROJECTS} />
     </div>
   </main>
 </Layout>
@@ -108,114 +70,4 @@ const PROJECTS = getAllProjects();
 
   .archive-lede { margin-top: var(--gap-md); max-width: 46ch; }
 
-  /* --- Rejilla --- */
-  .archive-grid {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: var(--gap-lg) var(--gap-md);
-  }
-
-  @media (min-width: 760px) {
-    .archive-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-xl) var(--gap-lg); }
-  }
-
-  .tile-shot {
-    position: relative;
-    display: block;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    background: var(--ink-3);
-  }
-
-  .tile-shot img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    opacity: 0.92;
-    transition: transform 900ms cubic-bezier(.16,1,.3,1), opacity 450ms ease;
-  }
-
-  .tile-shot:hover img,
-  .tile-shot:focus-visible img { transform: scale(1.04); opacity: 1; }
-
-  .bracket {
-    position: absolute;
-    width: 11px;
-    height: 11px;
-    border: 1px solid var(--signal);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 280ms ease;
-  }
-
-  .bracket--tl { top: 9px; left: 9px; border-right: 0; border-bottom: 0; }
-  .bracket--br { bottom: 9px; right: 9px; border-left: 0; border-top: 0; }
-
-  .tile-shot:hover .bracket, .tile-shot:focus-visible .bracket { opacity: 1; }
-
-  .tile-body { padding-top: 1rem; }
-
-  .tile-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    margin-bottom: 0.6rem;
-  }
-
-  .tile-num { color: var(--paper-2); }
-  .tile-rule { width: 20px; height: 1px; background: var(--rule); }
-
-  .tile-star {
-    color: var(--signal);
-    padding: 0.1rem 0.4rem;
-    border: 1px solid color-mix(in srgb, var(--signal) 30%, transparent);
-    border-radius: 3px;
-    font-size: 0.58rem;
-  }
-
-  .tile-title {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    line-height: 1.1;
-    letter-spacing: -0.015em;
-    color: var(--paper);
-  }
-
-  .tile-title a {
-    background-image: linear-gradient(var(--signal), var(--signal));
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 0% 1px;
-    transition: background-size 420ms cubic-bezier(.16,1,.3,1);
-  }
-
-  .tile-title a:hover { background-size: 100% 1px; }
-
-  .tile-text {
-    margin-top: 0.6rem;
-    font-size: var(--step--1);
-    color: var(--paper-2);
-    max-width: 48ch;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .tile-tags {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.35rem;
-    margin: 0.9rem 0 0;
-    padding: 0;
-  }
-
-  .tile-more { color: var(--paper-3); padding-left: 0.2rem; }
 </style>
