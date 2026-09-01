@@ -143,6 +143,41 @@ export const TAGS = {
         icon: FlaskIcon,
         color: 'currentColor',
     },
+    RUST: {
+        name: 'Rust',
+        icon: null,
+        color: '#DEA584',
+    },
+    TAURI: {
+        name: 'Tauri',
+        icon: null,
+        color: '#24C8D8',
+    },
+    SQLITE: {
+        name: 'SQLite',
+        icon: null,
+        color: '#003B57',
+    },
+    PYTORCH: {
+        name: 'PyTorch',
+        icon: null,
+        color: '#EE4C2C',
+    },
+    WHISPER: {
+        name: 'Whisper AI',
+        icon: null,
+        color: '#412991',
+    },
+    DEMUCS: {
+        name: 'Demucs',
+        icon: null,
+        color: '#FF7043',
+    },
+    FFMPEG: {
+        name: 'FFmpeg',
+        icon: null,
+        color: '#007808',
+    },
 }
 
 export interface Project {
@@ -348,19 +383,79 @@ export const ALL_PROJECTS: Project[] = [
         tags: [TAGS.PYTHON, TAGS.REACT, TAGS.FASTAPI, TAGS.OPENCV, TAGS.TYPESCRIPT, TAGS.SCIKIT],
         github: 'https://github.com/MichaelTaboada2003/physics-sensing-automation',
     },
+    {
+        title: 'Dev Command Center',
+        slug: 'command-dev-center',
+        context: 'Herramienta',
+        description: 'Aplicación de escritorio local-first para registrar, supervisar, ejecutar y mantener proyectos de desarrollo desde un panel centralizado con integración Git/GitHub en tiempo real, control de procesos y servidor MCP para agentes de IA.',
+        longDescription: `Dev Command Center es una aplicación de escritorio local-first diseñada para registrar, supervisar y controlar proyectos de desarrollo desde un único panel centralizado sin depender de servidores externos ni telemetría invasiva.
+
+**Gestión de proyectos y detección automática:**
+- Registro flexible mediante rutas absolutas o selector nativo de macOS (rfd)
+- Detección automática de stacks tecnológicos (Node.js, Python, Rust, PHP, Docker) y resolución inteligente de puertos
+- Proyectos favoritos fijados y archivo seguro de proyectos inactivos
+- Limpieza de disco protegida (node_modules, target, .venv, dist) con dry-run y confirmación explícita
+
+**Control de Git, GitHub Hub y Safe Offload:**
+- Panel de estado Git en tiempo real: ramas, archivos modificados, conteo de commits ahead/behind y último commit
+- Acciones rápidas en 1 clic: Pull, Push y Commit & Push integrado
+- Publicación asistida de proyectos locales a repositorios de GitHub
+- Safe Offload: libera almacenamiento local archivando a la nube únicamente tras verificar sincronización total
+
+**Supervisión de procesos y servidor MCP:**
+- Control de servidores de desarrollo en segundo plano con logs en tiempo real (stdout/stderr)
+- Lanzadores rápidos a editores (VS Code, Cursor, Antigravity IDE, Finder, Terminal)
+- Servidor MCP (Model Context Protocol) integrado para permitir a asistentes y agentes de IA inspeccionar y gestionar proyectos locales por stdio
+
+**Stack tecnológico:**
+- Frontend: React 19, TypeScript estricto, CSS modular
+- Backend: Rust nativo con Tauri v2
+- Persistencia: SQLite local con modo WAL y migraciones automáticas
+- Integración: Git CLI, GitHub API y protocolo MCP`,
+        image: '/command-dev-center.webp',
+        tags: [TAGS.RUST, TAGS.TAURI, TAGS.REACT, TAGS.TYPESCRIPT, TAGS.SQLITE],
+        github: 'https://github.com/MichaelTaboada2003/central-ejecucion',
+    },
+    {
+        title: 'Music Lab',
+        slug: 'music-lab',
+        context: 'Multimedia / IA',
+        description: 'Estación integral de producción musical, reproductor inmersivo HD con iluminación acústica a 60 FPS, sincronización de karaoke por IA (Whisper + Demucs) y generador de videos reactivos para redes sociales.',
+        longDescription: `Music Lab es una plataforma web full-stack que combina un reproductor musical de estética Glassmorphism reactivo con herramientas avanzadas de inteligencia artificial para separación de pistas, sincronización fonética milimétrica y renderizado de videos dinámicos para redes sociales.
+
+**Reproductor inmersivo y motor visual HD:**
+- Iluminación acústica volumétrica en tiempo real (Web Audio API + Canvas 2D) con análisis FFT a 60 FPS
+- Adaptación cromática automática extrayendo la paleta tonal de la carátula de cada canción
+- Soundcheck, calibración de ganancia y recorte no destructivo de fragmentos musicales con fundidos automáticos
+
+**Pipeline de Inteligencia Artificial y Karaoke:**
+- Aislamiento vocal mediante redes neuronales convolucionales profundas con Demucs v4 (htdemucs)
+- Detección de actividad de voz (VAD) con Auditok para descartar silencios
+- Alineación temporal forzada (Forced Alignment) palabra por palabra con Whisper Timestamped
+- Modo Karaoke en vivo con pantalla dividida y resaltado dinámico de letras
+
+**Video Studio dinámico para redes:**
+- Exportación vertical en alta definición (1080x1920 MP4) para TikTok, Reels y Shorts
+- Múltiples estilos visuales: Reproductor Glassmorphism y Modo Terminal Cyberpunk con arte ASCII
+- Sincronización lírica precisa con tipografía y transiciones reactivas al tempo
+
+**Stack tecnológico:**
+- Frontend: Vanilla JavaScript (ES Modules), HTML5 Semántico, Web Audio API, Canvas 2D
+- Backend: Python 3.14+, FastAPI, Starlette, Uvicorn, Pydantic v2
+- Modelos IA: OpenAI Whisper, Whisper-Timestamped, PyTorch, Torchaudio
+- Procesamiento & Video: Demucs v4, Auditok, SciPy, NumPy, MoviePy, Pillow, FFmpeg, yt-dlp`,
+        image: '/music-lab.webp',
+        tags: [TAGS.PYTHON, TAGS.FASTAPI, TAGS.PYTORCH, TAGS.JAVASCRIPT, TAGS.WHISPER, TAGS.FFMPEG],
+        github: 'https://github.com/MichaelTaboada2003/music-lab',
+    },
 ]
 
 /*
-  Cada imagen existe en tres tamaños, cada uno con su trabajo:
-    x.webp        1920px  detalle del proyecto
+  Cada imagen existe en dos formatos WebP optimizados:
+    x.webp        1920px  detalle del caso y OpenGraph
     x-card.webp   1040px  tarjetas y carrusel
-    x-og.jpg      1200px  vista previa al compartir
-
-  El JPEG de compartir no es un descuido: algunos rastreadores de redes
-  siguen sin mostrar WebP, y un enlace sin miniatura pesa más que unos KB.
 */
 export const cardSrc = (image: string) => image.replace('.webp', '-card.webp');
-export const ogSrc = (image: string) => image.replace('.webp', '-og.jpg');
 
 // Derived helpers — no duplication
 export const getFeaturedProjects = () => ALL_PROJECTS.filter(p => p.featured);

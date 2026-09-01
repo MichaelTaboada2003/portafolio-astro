@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import TagChip from "../../components/TagChip.astro";
 import GithubIcon from "../../icons/GithubIcon.astro";
-import { getAllProjects, ogSrc } from "../../data/projects";
+import { getAllProjects } from "../../data/projects";
 
 export async function getStaticPaths() {
   const projects = getAllProjects();
@@ -68,7 +68,7 @@ const body = project.longDescription ? render(project.longDescription) : "";
 <Layout
   title={`${project.title} — Michael Taboada`}
   description={project.description}
-  image={ogSrc(project.image)}
+  image={project.image}
 >
   <main id="contenido" class="case-page">
     <div class="shell">

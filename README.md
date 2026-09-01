@@ -6,7 +6,7 @@ Universidad Tecnológica de Bolívar (Cartagena, Colombia).
 
 **[Ver el sitio →](https://portafolio-astro-michael.netlify.app/)**
 
-![Portada del portafolio](./public/preview.jpg)
+![Portada del portafolio](./public/preview.webp)
 
 ---
 
@@ -113,24 +113,15 @@ npm run preview  # sirve dist/ localmente
 
 ### Imágenes
 
-Cada captura existe en tres tamaños dentro de `public/`, y cada uno tiene un
-trabajo concreto:
+Cada captura existe en dos tamaños WebP optimizados dentro de `public/`:
 
 | Fichero | Ancho | Dónde se usa |
 | --- | --- | --- |
-| `x.webp` | 1920px | Página de detalle del proyecto |
+| `x.webp` | 1920px | Página de detalle del proyecto y metadatos sociales |
 | `x-card.webp` | 1040px | Tarjetas de la portada y carrusel |
-| `x-og.jpg` | 1200px | Vista previa al compartir el enlace |
 
-Las dos primeras variantes se derivan con `cardSrc()` en `src/data/projects.ts`,
+La variante de tarjeta se deriva con `cardSrc()` en `src/data/projects.ts`,
 así que la fuente de verdad sigue siendo un único campo `image`.
-
-La vista previa social se queda en JPEG a propósito: algunos rastreadores de
-redes todavía no muestran WebP, y un enlace compartido sin miniatura cuesta más
-que los kilobytes que ahorraría.
-
-Los originales sin comprimir viven en `assets-originales/`, fuera de `public/`
-para que no se desplieguen. Si necesitas regenerar las variantes, parte de ahí.
 
 ## Accesibilidad
 

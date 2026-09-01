@@ -1,9 +1,10 @@
 ---
-import { getFeaturedProjects, cardSrc } from "../data/projects";
+import { getFeaturedProjects, getAllProjects, cardSrc } from "../data/projects";
 import GithubIcon from "../icons/GithubIcon.astro";
 import TagChip from "./TagChip.astro";
 
 const FEATURED = getFeaturedProjects();
+const allCount = getAllProjects().length;
 ---
 
 <div class="work">
@@ -73,7 +74,7 @@ const FEATURED = getFeaturedProjects();
   <a href="/proyectos" class="work-more">
     <span class="tele">Archivo completo</span>
     <span class="work-more-line" aria-hidden="true"></span>
-    <span class="work-more-label">Ver los 8 proyectos</span>
+    <span class="work-more-label">Ver los {allCount} proyectos</span>
     <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
       <path d="M2 7h10M8 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
